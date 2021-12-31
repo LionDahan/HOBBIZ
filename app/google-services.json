@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "628503909001",
+    "project_id": "hobbiz-7f9eb",
+    "storage_bucket": "hobbiz-7f9eb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:628503909001:android:399a081ebe48464a462c58",
+        "android_client_info": {
+          "package_name": "com.example.hobbiz"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "628503909001-oecog1kp5oaatm3tuf65b3ihmbk4jtf6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCZRLwLDVRiXL90ldJPjCt8bixVo6bq-sE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "628503909001-oecog1kp5oaatm3tuf65b3ihmbk4jtf6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

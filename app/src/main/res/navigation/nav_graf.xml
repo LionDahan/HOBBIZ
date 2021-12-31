@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graf"
+    app:startDestination="@id/login_page">
+
+    <fragment
+        android:id="@+id/login_page"
+        android:name="com.example.hobbiz.Login_page"
+        android:label="fragment_login_page"
+        tools:layout="@layout/fragment_login_page" >
+        <action
+            android:id="@+id/action_login_page_to_signUP_page"
+            app:destination="@id/signUP_page" />
+        <action
+            android:id="@+id/action_login_page_to_home_Page2"
+            app:destination="@id/home_Page" />
+    </fragment>
+    <fragment
+        android:id="@+id/signUP_page"
+        android:name="com.example.hobbiz.SignUP_page"
+        android:label="fragment_sign_up_page"
+        tools:layout="@layout/fragment_sign_up_page" >
+        <action
+            android:id="@+id/action_signUP_page_to_home_Page"
+            app:destination="@id/home_Page" />
+        <action
+            android:id="@+id/action_signUP_page_to_login_page2"
+            app:destination="@id/login_page" />
+    </fragment>
+    <fragment
+        android:id="@+id/home_Page"
+        android:name="com.example.hobbiz.Home_Page"
+        android:label="fragment_home__page"
+        tools:layout="@layout/fragment_home__page" >
+        <action
+            android:id="@+id/action_home_Page_to_login_page"
+            app:destination="@id/login_page" />
+        <action
+            android:id="@+id/action_home_Page_to_hobby_Details_Page"
+            app:destination="@id/hobby_Details_Page" />
+        <action
+            android:id="@+id/action_home_Page_to_personal_Area_Details2"
+            app:destination="@id/personal_Area_Details" />
+        <action
+            android:id="@+id/action_home_Page_to_add_New_Post"
+            app:destination="@id/add_New_Post" />
+    </fragment>
+    <fragment
+        android:id="@+id/hobby_Details_Page"
+        android:name="com.example.hobbiz.Hobby_Details_Page"
+        android:label="fragment_hobby__details__page"
+        tools:layout="@layout/fragment_hobby__details__page" >
+        <action
+            android:id="@+id/action_hobby_Details_Page_to_home_Page"
+            app:destination="@id/home_Page" />
+        <action
+            android:id="@+id/action_hobby_Details_Page_to_personal_Area_Details"
+            app:destination="@id/personal_Area_Details" />
+    </fragment>
+    <fragment
+        android:id="@+id/personal_Area_Details"
+        android:name="com.example.hobbiz.Personal_Area_Details"
+        android:label="fragment_personal__area__details"
+        tools:layout="@layout/fragment_personal__area__details" >
+        <action
+            android:id="@+id/action_personal_Area_Details_to_my_Post"
+            app:destination="@id/my_Post" />
+        <action
+            android:id="@+id/action_personal_Area_Details_to_add_New_Post"
+            app:destination="@id/add_New_Post" />
+        <action
+            android:id="@+id/action_personal_Area_Details_to_login_page"
+            app:destination="@id/login_page" />
+    </fragment>
+    <fragment
+        android:id="@+id/my_Post"
+        android:name="com.example.hobbiz.My_Post"
+        android:label="fragment_my__post"
+        tools:layout="@layout/fragment_my__post" >
+        <action
+            android:id="@+id/action_my_Post_to_personal_Area_Details"
+            app:destination="@id/personal_Area_Details" />
+        <action
+            android:id="@+id/action_my_Post_to_edit_Post_Page"
+            app:destination="@id/edit_Post_Page" />
+    </fragment>
+    <fragment
+        android:id="@+id/edit_Post_Page"
+        android:name="com.example.hobbiz.Edit_Post_Page"
+        android:label="fragment_edit__post__page"
+        tools:layout="@layout/fragment_edit__post__page" >
+        <action
+            android:id="@+id/action_edit_Post_Page_to_personal_Area_Details"
+            app:destination="@id/personal_Area_Details" />
+    </fragment>
+    <fragment
+        android:id="@+id/add_New_Post"
+        android:name="com.example.hobbiz.Add_New_Post"
+        android:label="fragment_add__new__post"
+        tools:layout="@layout/fragment_add__new__post" >
+        <action
+            android:id="@+id/action_add_New_Post_to_personal_Area_Details"
+            app:destination="@id/personal_Area_Details" />
+    </fragment>
+</navigation>
