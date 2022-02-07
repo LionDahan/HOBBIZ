@@ -3,11 +3,9 @@ package com.example.hobbiz;
 import android.os.Bundle;
 
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
-import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,27 +13,24 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
+import com.example.hobbiz.Model.DataModel;
+import com.example.hobbiz.Model.User;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.auth.FirebaseUser;
 
 
 public class SignUP_page extends Fragment implements View.OnClickListener{
     View view;
-    Button sign_up_btn;
-    Button sign_in_btn;
+    Button sign_up_btn, sign_in_btn;
     ProgressBar progressBar;
     EditText name_input, email_input, password_input;
-    FirebaseAuth mAuth;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mAuth = FirebaseAuth.getInstance();
+
     }
 
     @Override
@@ -104,27 +99,25 @@ public class SignUP_page extends Fragment implements View.OnClickListener{
             email_input.requestFocus();
             return;
         }
+
+        User user= new User(email_input.toString(), name_input.toString());
         progressBar.setVisibility(View.VISIBLE);
+        DataModel.data_instence.registerUser(new User(userEmail,userName), userPassword, new DataModel.SignupUserListener() {
+            @Override
+            public void onComplete(FirebaseUser user, Task task) {
+                if(task.isSuccessful()) {
+                    Toast.makeText(getActivity(), "Sign-up success.", Toast.LENGTH_LONG).show();
+                    FirebaseAuth.getInstance().getCurrentUser().sendEmailVerification();
+                    Navigation.findNavController(view).navigate(SignUP_pageDirections.actionSignUPPageToHomePage());
+                } else {
+                    Toast.makeText(getActivity(), "Sign-up Failed, email/password is not valid.", Toast.LENGTH_LONG).show();
+                }
+                progressBar.setVisibility(View.GONE);
+            }
+        });
 
 
-        mAuth.createUserWithEmailAndPassword(userEmail, userPassword)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        User newUser = new User(userEmail,userName);
-                        FirebaseDatabase.getInstance().getReference("users").setValue(newUser)
-                                .addOnCompleteListener(task1 -> {
-                                    if(task1.isSuccessful()) {
-                                        Toast.makeText(getActivity(), "Sign-up success, email/password is not valid.", Toast.LENGTH_LONG).show();
-                                        FirebaseAuth.getInstance().getCurrentUser().sendEmailVerification();
-                                        Navigation.findNavController(view).navigate(SignUP_pageDirections.actionSignUPPageToHomePage());
-                                    } else {
-                                        Toast.makeText(getActivity(), "Sign-up Failed, email/password is not valid.", Toast.LENGTH_LONG).show();
-                                    }
-                                    progressBar.setVisibility(View.GONE);
-                                });
-                    }
-                });
+
 
     }
 

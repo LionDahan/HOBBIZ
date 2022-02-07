@@ -1,64 +1,142 @@
 package com.example.hobbiz;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
+import static android.app.Activity.RESULT_OK;
 
+
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link Add_New_Post#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class Add_New_Post extends Fragment {
+import com.example.hobbiz.Model.DataModel;
+import com.example.hobbiz.Model.Hobbiz;
+import com.google.android.gms.tasks.Task;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public Add_New_Post() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment Add_New_Post.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static Add_New_Post newInstance(String param1, String param2) {
-        Add_New_Post fragment = new Add_New_Post();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+public class Add_New_Post extends Fragment implements View.OnClickListener {
+    static final int REQUEST_IMAGE_CAPTURE = 1;
+    ImageButton save, cancel, add_pic;
+     EditText city, ages, name, contact, description;
+     ProgressBar progressBar;
+     View view;
+     Bitmap bitmap;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_add__new__post, container, false);
+        view= inflater.inflate(R.layout.fragment_add__new__post, container, false);
+        cancel = view.findViewById(R.id.cancel_btn);
+        save= view.findViewById(R.id.save_btn);
+        name= view.findViewById(R.id.name_txt);
+        ages =view.findViewById(R.id.ages_txt);
+        city =view.findViewById(R.id.city_txt);
+        contact=view.findViewById(R.id.contact_txt);
+        description=view.findViewById(R.id.description_txt);
+        progressBar= view.findViewById(R.id.progresbar_in_add_post);
+        add_pic = view.findViewById(R.id.add_photo_btn);
+        cancel.setOnClickListener(this);
+        save.setOnClickListener(this);
+        add_pic.setOnClickListener(this);
+
+        return view;
     }
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.cancel_btn:
+                Navigation.findNavController(view).navigateUp();
+                break;
+            case R.id.add_photo_btn:
+                uploadImage();
+                break;
+            case R.id.save_btn:
+                savePost();
+                break;
+        }
+    }
+    private void savePost(){
+        String hobbyName_input, age_input, city_input, contact_input, description_input;
+        hobbyName_input = name.getText().toString();
+        age_input = ages.getText().toString();
+        city_input = city.getText().toString();
+        contact_input = contact.getText().toString();
+        description_input = description.getText().toString();
+
+        if (hobbyName_input.isEmpty()){
+            name.setError("Required Field");
+            name.requestFocus();
+            return; }
+
+        if (age_input.isEmpty()){
+            ages.setError("Required Field");
+            ages.requestFocus();
+            return; }
+
+        if (city_input.isEmpty()){
+            city.setError("Required Field");
+            city.requestFocus();
+            return; }
+
+        if (contact_input.isEmpty()){
+            contact.setError("Required Field");
+            contact.requestFocus();
+            return; }
+
+        if (description_input.isEmpty()){
+            description.setError("Required Field");
+            description.requestFocus();
+            return; }
+
+        if (bitmap == null){ return;}
+
+        progressBar.setVisibility(View.VISIBLE);
+
+        Hobbiz hobby = new Hobbiz(hobbyName_input,city_input,age_input,contact_input,description_input);
+
+        DataModel.data_instence.uploadHobby(hobby, bitmap, new DataModel.UploadHobbyListener() {
+            @Override
+            public void onComplete(String id, Task task) {
+
+                if(task.isSuccessful()) {
+                    Toast.makeText(getActivity(), "Upload success.", Toast.LENGTH_LONG).show();
+                    Navigation.findNavController(view).navigateUp();
+                } else {
+                    Toast.makeText(getActivity(), "Upload Failed.", Toast.LENGTH_LONG).show();
+                }
+                progressBar.setVisibility(View.GONE);
+            }
+        });
+    }
+    private void uploadImage(){
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(intent,REQUEST_IMAGE_CAPTURE);
+
+
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK){
+            Bundle bundle = data.getExtras();
+            bitmap = (Bitmap) bundle.get("data");
+            add_pic.setImageBitmap(bitmap);
+        }
+    }
+
 }
