@@ -13,6 +13,7 @@ public class HomePageViewModel extends ViewModel {
     
     public LiveData<List<Hobbiz>>getData(){
         return data;
+        //
     }
 
 }
