@@ -2,6 +2,7 @@ package com.example.hobbiz.Model;
 
 import android.util.Log;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.hobbiz.MyApplication;
@@ -10,19 +11,31 @@ import java.util.List;
 
 public class Model {
     public static final Model instance = new Model();
+
     DataModel fbModel = new DataModel();
+    MutableLiveData<List<Hobbiz>> hobbizList = new MutableLiveData<List<Hobbiz>>();
+    MutableLiveData<LoadingState> hobbizListLoadingState= new MutableLiveData<LoadingState>();
+
 
     private Model(){
+        hobbizListLoadingState.setValue(LoadingState.loaded);
         reloadHobbysList();
+
     }
 
-    public interface GetAllProductsListener {
-        void onComplete(List<Hobbiz> data);
+    public enum LoadingState{
+        loading,
+        loaded
+    }
+    public LiveData<LoadingState> getHobbizLoadingState(){
+        return hobbizListLoadingState;
     }
 
-    MutableLiveData<List<Hobbiz>> productListLtd = new MutableLiveData<List<Hobbiz>>();
+    public LiveData<List<Hobbiz>> getAllHobbiz(){return hobbizList;}
+
 
     public void reloadHobbysList() {
+        hobbizListLoadingState.setValue(LoadingState.loading);
         Long localLastUpdate = Hobbiz.getLocalLastUpdated();
         Log.d("TAG","localLastUpdate: " + localLastUpdate);
 

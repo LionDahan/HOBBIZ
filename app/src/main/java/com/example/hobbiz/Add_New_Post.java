@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.example.hobbiz.Model.DataModel;
 import com.example.hobbiz.Model.Hobbiz;
+import com.example.hobbiz.Model.Interfaces.UploadHobbyListener;
 import com.google.android.gms.tasks.Task;
 
 
@@ -107,13 +108,11 @@ public class Add_New_Post extends Fragment implements View.OnClickListener {
 
         progressBar.setVisibility(View.VISIBLE);
 
-        Hobbiz hobby = new Hobbiz(hobbyName_input,city_input,age_input,contact_input,description_input);
-
-        DataModel.data_instence.uploadHobby(hobby, bitmap, new DataModel.UploadHobbyListener() {
+        Hobbiz hobby = new Hobbiz(hobbyName_input,age_input,city_input, contact_input,description_input);
+        DataModel.data_instence.uploadPet(pet, bitmap, new UploadPetListener() {
             @Override
-            public void onComplete(String id, Task task) {
-
-                if(task.isSuccessful()) {
+            public void onComplete(Task task, Pets pet) {
+                if(pet.getImg() != null) {
                     Toast.makeText(getActivity(), "Upload success.", Toast.LENGTH_LONG).show();
                     Navigation.findNavController(view).navigateUp();
                 } else {

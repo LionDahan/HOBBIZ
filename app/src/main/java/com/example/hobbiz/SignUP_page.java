@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -99,27 +100,18 @@ public class SignUP_page extends Fragment implements View.OnClickListener{
             email_input.requestFocus();
             return;
         }
-
-        User user= new User(email_input.toString(), name_input.toString());
         progressBar.setVisibility(View.VISIBLE);
-        DataModel.data_instence.registerUser(new User(userEmail,userName), userPassword, new DataModel.SignupUserListener() {
-            @Override
-            public void onComplete(FirebaseUser user, Task task) {
-                if(task.isSuccessful()) {
-                    Toast.makeText(getActivity(), "Sign-up success.", Toast.LENGTH_LONG).show();
-                    FirebaseAuth.getInstance().getCurrentUser().sendEmailVerification();
-                    Navigation.findNavController(view).navigate(SignUP_pageDirections.actionSignUPPageToHomePage());
-                } else {
-                    Toast.makeText(getActivity(), "Sign-up Failed, email/password is not valid.", Toast.LENGTH_LONG).show();
-                }
-                progressBar.setVisibility(View.GONE);
+
+        DataModel.data_instence.registerUser(new User(userEmail, userName), userPassword, (user, task) -> {
+            Log.d("task", task.toString());
+            if(task.isSuccessful()) {
+                Toast.makeText(getActivity(), "Sign-up success.", Toast.LENGTH_LONG).show();
+                Navigation.findNavController(view).navigate(SignUP_pageDirections.actionSignUPPageToHomePage());
+            } else {
+                Toast.makeText(getActivity(), "Sign-up Failed, email/password is not valid.", Toast.LENGTH_LONG).show();
             }
+            progressBar.setVisibility(View.GONE);
         });
-
-
-
-
     }
-
 
 }

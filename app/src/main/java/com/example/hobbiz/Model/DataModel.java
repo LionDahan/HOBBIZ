@@ -6,6 +6,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.example.hobbiz.Model.Interfaces.UploadImageListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -72,45 +73,47 @@ public class DataModel {
     }
 
     public interface UploadHobbyListener {
-        void onComplete(String id, Task task);
+        void onComplete(Task task, Hobbiz hobbiz);
     }
 
     public void uploadHobby(Hobbiz hobbiz, Bitmap bitmap, UploadHobbyListener listener) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        Map<String, Object> dataModelHobby = new HashMap<>();
+        DocumentReference hobbyDocRef = db.collection("hobbiz").document();
 
-        Map<String, Object> data_hobby = new HashMap<>();
-        data_hobby.put("hobby_name",hobbiz.getHobby_Name());
-        data_hobby.put("city", hobbiz.getCity());
-        data_hobby.put("age", hobbiz.getAge());
-        data_hobby.put("contact", hobbiz.getContact());
-        data_hobby.put("description", hobbiz.getDescription());
-
-        data_hobby.put("timestamp", FieldValue.serverTimestamp());
-
-        DocumentReference hobby_doc = db.collection("hobbiz").document();
-
-        hobby_doc.set(data_hobby).addOnCompleteListener(new OnCompleteListener<Void>() {
+        hobbyDocRef.set(dataModelHobby).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 DocumentReference userRef = db.collection("users").document(user.getUid());
-                userRef.update("hobbiz", FieldValue.arrayUnion(hobby_doc)).addOnSuccessListener(new OnSuccessListener<Void>() {
+                userRef.update("hobbiz", FieldValue.arrayUnion(hobbyDocRef)).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(@NonNull Void unused) {
                         FirebaseStorage storage = FirebaseStorage.getInstance();
-
-                        StorageReference storageRef = storage.getReference();
-                        StorageReference imageRef = storageRef.child("images/" + hobby_doc.getId() + ".jpg");
-
-                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-                        byte[] data = baos.toByteArray();
-
-                        UploadTask uploadTask = imageRef.putBytes(data);
-                        uploadTask.addOnSuccessListener(taskSnapshot -> imageRef.getDownloadUrl()
-                                .addOnSuccessListener(uri -> {
-                                    Uri downloadUrl = uri;
-                                    listener.onComplete( hobby_doc.getId(), task);
-                                }));
+                        uploadImage(bitmap, hobbyDocRef.getId(), new UploadImageListener() {
+                            @Override
+                            public void onComplete(String url) {
+                                if (url != null) {
+                                    dataModelHobby.put("hobby_name", hobbiz.getHobby_Name());
+                                    dataModelHobby.put("age", hobbiz.getAge());
+                                    dataModelHobby.put("city", hobbiz.getCity());
+                                    dataModelHobby.put("contact", hobbiz.getContact());
+                                    dataModelHobby.put("description", hobbiz.getDescription());
+                                    dataModelHobby.put("timestamp", FieldValue.serverTimestamp());
+                                    Log.d("IMG", url);
+                                    dataModelHobby.put("image", url);
+                                    hobbyDocRef.set(dataModelHobby).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            hobbiz.setImage(url);
+                                            listener.onComplete(task,hobbiz);
+                                        }
+                                    });
+                                } else {
+                                    listener.onComplete(task, new Hobbiz());
+                                    // pet will not be initialized and we will know that there was error.
+                                }
+                            }
+                        });
                     }
                 });
             }
@@ -121,77 +124,82 @@ public class DataModel {
         void onComplete(Hobbiz hobbiz);
     }
 
-    public void getHobby(String productId, GetHobbyListener listener ) {
-        DocumentReference productDocRef = db.collection("products").document(productId);
-        productDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+    public void getHobby(String hobbyId ,GetHobbyListener listener ){
+        db.collection("hobbiz").document(hobbyId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                FirebaseStorage storage = FirebaseStorage.getInstance();
-                StorageReference storageRef = storage.getReference();
                 DocumentSnapshot document = task.getResult();
-                storageRef.child("images/" + productId + ".jpg").getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Uri> task) {
-                        if(document.exists()) {
-                            Hobbiz hobbiz = Hobbiz.HobbizFromJson(document.getData());
-                            hobbiz.setImage(task.getResult());
-                            listener.onComplete(hobbiz);
-                        }else {
-                            listener.onComplete(null);
-                        }
-                    }
-                });
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                listener.onComplete(null);
+                if(document.exists()){
+                    Hobbiz h = Hobbiz.HobbizFromJson(document.getData());
+                    h.setID(document.getId());
+                }
             }
         });
     }
 
-    public interface GetAllProductsListener{
-        void onComplete(List<Hobbiz> productsList);
-    }
-    public interface GetUserByIdListener{
-        void onComplete(Task task, User user);
-    }
-    public void getUserById(String userId, GetUserByIdListener listener) {
-        DocumentReference userDocRef = db.collection("users").document(userId);
-        userDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                DocumentSnapshot snap = task.getResult();
-                User user = new User();;
-                user.setEmail(snap.get("email").toString());
-                user.setFullName(snap.get("fname").toString());
-                listener.onComplete(task, user);
-            }
-        });
+    public interface GetAllHobbizListener{
+        void onComplete(List<Hobbiz> data);
     }
 
-    public void getAllProducts(Long since,GetAllProductsListener listener) {
-        db.collection("hobbiz").whereGreaterThanOrEqualTo(Hobbiz.TIME, new Timestamp(since,0))
+    public void getAllHobbiz(Long since, GetAllHobbizListener listener) {
+        db.collection("hobbiz")
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                LinkedList<Hobbiz> hobbizList = new LinkedList<Hobbiz>();
                 if(task.isSuccessful()) {
-                    LinkedList<Hobbiz> hobbizList = new LinkedList<Hobbiz>();
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        Hobbiz h = Hobbiz.HobbizFromJson(document.getData());
+                    for (QueryDocumentSnapshot doc: task.getResult()) {
+                        Hobbiz h = Hobbiz.HobbizFromJson(doc.getData());
+                        h.setID(doc.getId());
 
-                        if(h != null) {
+                        if (h != null) {
                             hobbizList.add(h);
                         }
-                        listener.onComplete(hobbizList);
                     }
+
+                }else {
+                    Log.d("Hobby", "Not successfull - didn't get all hobbiz");
                 }
+                listener.onComplete(hobbizList);
             }
+
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
+                Log.d("ERROR!", "Not successfull - didn't get all hobbiz");
                 listener.onComplete(null);
             }
         });
     }
+
+    public void uploadImage(Bitmap bitmap, String id_key, final UploadImageListener listener)  {
+
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        final StorageReference imageRef;
+
+        imageRef = storage.getReference().child(Constants.MODEL_FIRE_BASE_IMAGE_COLLECTION).child(id_key);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG,100,baos);
+        byte[] data = baos.toByteArray();
+        UploadTask uploadTask=imageRef.putBytes(data);
+
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                listener.onComplete(null);
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                imageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        listener.onComplete(uri.toString());
+                    }
+                });
+            }
+        });
+    }
+
+
 }

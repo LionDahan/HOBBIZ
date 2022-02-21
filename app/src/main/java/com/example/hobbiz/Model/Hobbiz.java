@@ -5,40 +5,62 @@ import com.google.firebase.Timestamp;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.provider.SyncStateContract;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
+import androidx.room.PrimaryKey;
 
 import java.util.Map;
 
-public class Hobbiz {
-    String hobby_Name,age, city, contact, description;
-    Uri image;
-    public final static String LAST_UPDATED = "LAST_UPDATED";
+import kotlin.text.UStringsKt;
+
+public class Hobbiz implements Parcelable {
+    @PrimaryKey
+    @NonNull
+    private String id ="";
+    private String hobby_Name,age, city, contact, description, image;
+    private boolean delete_flag;
 
     Long lastUpdated = new Long(0);
 
-    final static String ID = "id";
+    public Hobbiz(){}
 
-    final static String CITY = "city";
-    final static String NAME_HOBBY = "hobby_Name";
-    final static String CONTACT = "contact";
-    final static String DESCRIPTION = "description";
-    final static String AGE = "age";
+    public Hobbiz(String hobby_Name, String age, String city, String contact, String description){
+        this.hobby_Name= hobby_Name;
+        this.age=age;
+        this.city = city;
+        this.contact=contact;
+        this.description= description;
+    }
+
 
 
     final static String TIME = "timestamp";
 
+    public Hobbiz(Parcel in) {
+        id = in.readString();
+        hobby_Name = in.readString();
+        city = in.readString();
+        age = in.readString();
+        contact = in.readString();
+        description = in.readString();
+        image = in.readString();
 
-    public Hobbiz(){}
-
-    public Hobbiz(String hobby_Name,String city,String age,String contact,String description){
-        this.hobby_Name = hobby_Name;
-        this.city = city;
-        this.age = age;
-        this.contact = contact;
-        this.description= description;
+        delete_flag = in.readByte() != 0;
+        if (in.readByte() == 0) {
+            lastUpdated = null;
+        } else {
+            lastUpdated = in.readLong();
+        }
 
     }
 
+    public String getId(){return id;}
+
+    public void setID(String id){this.id= id;}
 
     public String getHobby_Name() {
         return hobby_Name;
@@ -61,9 +83,9 @@ public class Hobbiz {
         return description;
     }
 
-    public Uri getImage(){return image;}
+    public String getImage(){return image;}
 
-    public void setImage(Uri image) {
+    public void setImage(String image) {
         this.image = image;
     }
 
@@ -82,6 +104,12 @@ public class Hobbiz {
     public void setLastUpdated(Long lastUpdated) {
         this.lastUpdated = lastUpdated;
     }
+    public boolean isDelete_flag(){
+        return delete_flag;
+    }
+    public void setDelete_flag(boolean delete){
+        delete_flag = delete;
+    }
 
     static Hobbiz HobbizFromJson(Map<String,Object> json){
 
@@ -90,17 +118,19 @@ public class Hobbiz {
         String age = (String) json.get("age");
         String contact = (String) json.get("contact");
         String description = (String) json.get("description");
+        String image= (String) json.get("image");
 
 
         Hobbiz hobby = new Hobbiz(name,city,age,contact,description);
-        Timestamp ts = (Timestamp)json.get(LAST_UPDATED);
+        hobby.setImage(image);
+        Timestamp ts = (Timestamp)json.get(Constants.LAST_UPDATED);
         hobby.setLastUpdated(new Long(ts.getSeconds()));
 
         return hobby;
     }
     static Long getLocalLastUpdated(){
         Long localLastUpdate = MyApplication.getContext().getSharedPreferences("TAG", Context.MODE_PRIVATE)
-                .getLong("STUDENTS_LAST_UPDATE",0);
+                .getLong("HOBBIZ_LAST_UPDATE",0);
         return localLastUpdate;
     }
 
@@ -111,4 +141,44 @@ public class Hobbiz {
         editor.commit();
         Log.d("TAG", "new lud " + date);
     }
+
+    public Long getLastUpdated(){return lastUpdated;}
+
+    public static final Creator<Hobbiz> CREATOR = new Creator<Hobbiz>() {
+        @Override
+        public Hobbiz createFromParcel(Parcel in) {
+            return new Hobbiz(in);
+        }
+
+        @Override
+        public Hobbiz[] newArray(int size) {
+            return new Hobbiz[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(id);
+        parcel.writeString(hobby_Name);
+        parcel.writeString(city);
+        parcel.writeString(age);
+        parcel.writeString(contact);
+        parcel.writeString(description);
+        parcel.writeString(image);
+        parcel.writeByte((byte) (delete_flag ? 1 : 0));
+        if (lastUpdated == null) {
+            parcel.writeByte((byte) 0);
+        } else {
+            parcel.writeByte((byte) 1);
+            parcel.writeLong(lastUpdated);
+        }
+    }
+
+
+
 }

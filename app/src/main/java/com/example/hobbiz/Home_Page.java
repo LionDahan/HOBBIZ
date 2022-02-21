@@ -1,10 +1,14 @@
 package com.example.hobbiz;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -20,11 +24,16 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.hobbiz.Model.Interfaces.OnItemClickListener;
 import com.example.hobbiz.Model.Model;
 import com.example.hobbiz.Model.Hobbiz;
+import com.example.hobbiz.Model.Recycler.MyAdapter;
 import com.squareup.picasso.Picasso;
+
+import java.util.List;
 
 
 public class Home_Page extends Fragment implements View.OnClickListener{
@@ -32,35 +41,65 @@ public class Home_Page extends Fragment implements View.OnClickListener{
     View view;
     HomePageViewModel viewModel;
     SwipeRefreshLayout swipeRefresh;
+    ProgressBar prbar;
+    RecyclerView hobiz_list;
     MyAdapter adapter;
 
-
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        viewModel = new ViewModelProvider(this).get(HomePageViewModel.class);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_home__page, container, false);
+        hobiz_list = view.findViewById(R.id.recycler_view);
+        prbar= view.findViewById(R.id.prBar_homepage);
+        swipeRefresh= view.findViewById(R.id.hobby_list_swipe_refresh);
+        addPost= view.findViewById(R.id.add_new_post_from_homepage1);
+        toProfile= view.findViewById(R.id.personalArea2);
+        addPost.setOnClickListener(this);
+        toProfile.setOnClickListener(this);
+        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                swipeRefresh.setRefreshing(true);
+                Model.instance.reloadHobbysList();
+                adapter.notifyDataSetChanged();
+                swipeRefresh.setRefreshing(false);
+            }
+        });
+        LinearLayoutManager linearLayoutManager= new LinearLayoutManager(getContext());
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(hobiz_list.getContext(), linearLayoutManager.getOrientation());
+        adapter= new MyAdapter();
+        hobiz_list.setHasFixedSize(true);
+        hobiz_list.setAdapter(adapter);
+        hobiz_list.setLayoutManager(linearLayoutManager);
+        hobiz_list.addItemDecoration(dividerItemDecoration);
+        setHasOptionsMenu(true);
+        viewModel.getData().observe(getViewLifecycleOwner(), new Observer<List<Hobbiz>>() {
+            @Override
+            public void onChanged(List<Hobbiz> hobbizs) {
+                adapter.setFragment(Home_Page.this);
+                adapter.setData(hobbizs);
+                adapter.notifyDataSetChanged();
+                prbar.setVisibility(View.GONE);
 
-        RecyclerView list = view.findViewById(R.id.recycler_view);
-        list.setHasFixedSize(true);
+            }
+        });
+        prbar.setVisibility(View.VISIBLE);
 
-        list.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        adapter = new MyAdapter();
-        list.setAdapter(adapter);
 
         adapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(int position, View v) {
-                Hobbiz hobby = viewModel.getData().getValue().get(position);
-                Log.d("TAG","row was clicked " + position);
-//                homepage_FragmentDirections.ActionHomepageFragmentToGetDetailsFragment action = homepage_FragmentDirections.ActionHomepageFragmentToGetDetailsFragment(pet.getType());
-//                Navigation.findNavController(v).navigate(action);
+                Hobbiz hoby= viewModel.getData().getValue().get(position);
+                Home_PageDirections.
+
             }
+
         });
 
         swipeRefresh = view.findViewById(R.id.hobby_list_swipe_refresh);
@@ -144,34 +183,7 @@ public class Home_Page extends Fragment implements View.OnClickListener{
         }
     }
 
-    interface OnItemClickListener{
+    interface OnItemClickListener {
         void onItemClick(int position, View v);
-    }
-    class MyAdapter extends RecyclerView.Adapter<MyViewHolder>{
-
-        OnItemClickListener listener;
-        public void setOnItemClickListener(OnItemClickListener listener){
-            this.listener = listener;
-        }
-
-        @NonNull
-        @Override
-        public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = getLayoutInflater().inflate(R.layout.fragment_home__page,parent,false);
-            MyViewHolder holder = new MyViewHolder(view,listener);
-            return holder;
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-            Hobbiz hoby = viewModel.getData().getValue().get(position);
-            holder.bind(hoby);
-        }
-
-        @Override
-        public int getItemCount() {
-            if (viewModel.getData().getValue() == null) return 0;
-            return viewModel.getData().getValue().size();
-        }
     }
 }
