@@ -21,7 +21,7 @@ import android.widget.Toast;
 
 import com.example.hobbiz.Model.DataModel;
 import com.example.hobbiz.Model.Hobbiz;
-import com.example.hobbiz.Model.Interfaces.UploadHobbyListener;
+import com.example.hobbiz.Model.DataModel.UploadHobbyListener;
 import com.google.android.gms.tasks.Task;
 
 
@@ -45,13 +45,13 @@ public class Add_New_Post extends Fragment implements View.OnClickListener {
         view= inflater.inflate(R.layout.fragment_add__new__post, container, false);
         cancel = view.findViewById(R.id.cancel_btn);
         save= view.findViewById(R.id.save_btn);
-        name= view.findViewById(R.id.name_txt);
-        ages =view.findViewById(R.id.ages_txt);
-        city =view.findViewById(R.id.city_txt);
-        contact=view.findViewById(R.id.contact_txt);
+        name= view.findViewById(R.id.ages_in_details_page);
+        ages =view.findViewById(R.id.city_in_details_page);
+        city =view.findViewById(R.id.contact_in_details_page);
+        contact=view.findViewById(R.id.description_in_details_page);
         description=view.findViewById(R.id.description_txt);
         progressBar= view.findViewById(R.id.progresbar_in_add_post);
-        add_pic = view.findViewById(R.id.add_photo_btn);
+        add_pic = view.findViewById(R.id.image_in_details_page);
         cancel.setOnClickListener(this);
         save.setOnClickListener(this);
         add_pic.setOnClickListener(this);
@@ -63,7 +63,7 @@ public class Add_New_Post extends Fragment implements View.OnClickListener {
             case R.id.cancel_btn:
                 Navigation.findNavController(view).navigateUp();
                 break;
-            case R.id.add_photo_btn:
+            case R.id.image_in_details_page:
                 uploadImage();
                 break;
             case R.id.save_btn:
@@ -109,19 +109,21 @@ public class Add_New_Post extends Fragment implements View.OnClickListener {
         progressBar.setVisibility(View.VISIBLE);
 
         Hobbiz hobby = new Hobbiz(hobbyName_input,age_input,city_input, contact_input,description_input);
-        DataModel.data_instence.uploadPet(pet, bitmap, new UploadPetListener() {
+        DataModel.data_instence.uploadHobby(hobby, bitmap, new UploadHobbyListener() {
             @Override
-            public void onComplete(Task task, Pets pet) {
-                if(pet.getImg() != null) {
-                    Toast.makeText(getActivity(), "Upload success.", Toast.LENGTH_LONG).show();
+            public void onComplete(Task task, Hobbiz hobby) {
+                if (hobby.getImage() != null){
+                    Toast.makeText(getActivity(), "Upload Success", Toast.LENGTH_LONG).show();
                     Navigation.findNavController(view).navigateUp();
-                } else {
-                    Toast.makeText(getActivity(), "Upload Failed.", Toast.LENGTH_LONG).show();
+                } else{
+                    Toast.makeText(getActivity(),"Upload Failed", Toast.LENGTH_LONG).show();
                 }
                 progressBar.setVisibility(View.GONE);
             }
         });
     }
+
+
     private void uploadImage(){
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult(intent,REQUEST_IMAGE_CAPTURE);

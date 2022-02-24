@@ -1,64 +1,81 @@
 package com.example.hobbiz;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link Hobby_Details_Page#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class Hobby_Details_Page extends Fragment {
+import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+import com.example.hobbiz.Model.User;
+import com.example.hobbiz.Model.Hobbiz;
+import com.google.android.gms.tasks.Task;
+import com.squareup.picasso.Picasso;
 
-    public Hobby_Details_Page() {
-        // Required empty public constructor
-    }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment Hobby_Details_Page.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static Hobby_Details_Page newInstance(String param1, String param2) {
-        Hobby_Details_Page fragment = new Hobby_Details_Page();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+public class Hobby_Details_Page extends Fragment implements View.OnClickListener {
+    ImageButton toProfile;
+    View view;
+    Hobbiz hobby;
+    ProgressBar progressBar;
+    ImageView hobbyImage;
+    TextView name, city, ages, contact, description;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        hobby = getDetails_FragmentArgs.fromBundle(getArguments()).getPet();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_hobby__details__page, container, false);
+        view = inflater.inflate(R.layout.fragment_hobby__details__page, container, false);
+
+        toProfile = view.findViewById(R.id.personalA_in_hobby_details);
+        name = view.findViewById(R.id.title_in_details_page);
+        city = view.findViewById(R.id.city_in_details_page);
+        ages = view.findViewById(R.id.ages_in_details_page);
+        contact = view.findViewById(R.id.contact_in_details_page);
+        description= view.findViewById(R.id.description_in_details_page);
+        hobbyImage = view.findViewById(R.id.image_in_details_page);
+        progressBar = view.findViewById(R.id.progressBar_in_personalArea);
+
+        toProfile.setOnClickListener(this);
+        name.setText( hobby.getHobby_Name()+ "Class");
+        city.setText("City: " + hobby.getCity());
+        ages.setText("Ages: " + hobby.getAge());
+        contact.setText("Contact: " + hobby.getContact());
+        description.setText("Description: " + hobby.getDescription());
+
+        hobbyImage.setImageResource(R.drawable.tennis);
+        Log.d("",hobby.getImage());
+        if(hobby.getImage() != null) {
+            Picasso.get().load(hobby.getImage()).into(hobbyImage);
+        }
+        return view;
     }
+
+    public void onClick(View v) {
+        switch(v.getId()) {
+            case R.id.personalA_in_hobby_details:
+                Navigation.findNavController(view).navigate(Hobby_Details_PageDirections.actionHobbyDetailsPageToPersonalAreaDetails(new User()));
+                break;
+
+
+        }
+    }
+
+
 }

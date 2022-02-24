@@ -13,25 +13,19 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
-
+;
 import com.example.hobbiz.Model.Interfaces.OnItemClickListener;
 import com.example.hobbiz.Model.Model;
 import com.example.hobbiz.Model.Hobbiz;
 import com.example.hobbiz.Model.Recycler.MyAdapter;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -59,7 +53,7 @@ public class Home_Page extends Fragment implements View.OnClickListener{
         prbar= view.findViewById(R.id.prBar_homepage);
         swipeRefresh= view.findViewById(R.id.hobby_list_swipe_refresh);
         addPost= view.findViewById(R.id.add_new_post_from_homepage1);
-        toProfile= view.findViewById(R.id.personalArea2);
+        toProfile= view.findViewById(R.id.personalA_in_hobby_details);
         addPost.setOnClickListener(this);
         toProfile.setOnClickListener(this);
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -95,33 +89,30 @@ public class Home_Page extends Fragment implements View.OnClickListener{
         adapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(int position, View v) {
-                Hobbiz hoby= viewModel.getData().getValue().get(position);
-                Home_PageDirections.
-
+                Hobbiz hobby = viewModel.getData().getValue().get(position);
+                Home_PageDirections.ActionHomePageToHobbyDetailsPage action =
+                        Home_PageDirections.actionHomePageToHobbyDetailsPage(hobby);
+                Navigation.findNavController(v).navigate(action);
             }
-
         });
 
-        swipeRefresh = view.findViewById(R.id.hobby_list_swipe_refresh);
-        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        swipeRefresh.setRefreshing(Model.instance.getHobbizLoadingState().getValue()== Model.LoadingState.loading);
+        Model.instance.getHobbizLoadingState().observe(getViewLifecycleOwner(), loadingState -> {
+            swipeRefresh.setRefreshing(loadingState == Model.LoadingState.loading);
+        });
+        view.setFocusableInTouchMode(true);
+        view.requestFocus();
+        view.setOnKeyListener(new View.OnKeyListener() {
             @Override
-            public void onRefresh() {
-                Model.instance.reloadHobbysList();
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if(event.getAction()== KeyEvent.ACTION_DOWN){
+                    return true;
+                }
+                return false;
             }
         });
-
-        setHasOptionsMenu(true);
-//        if (viewModel.getData() == null ) {refreshData();};
-//
-//        viewModel.getData().observe(getViewLifecycleOwner(), (studentsList)->{
-//            adapter.notifyDataSetChanged();
-//        });
-
-//        swipeRefresh.setRefreshing(Model.instance.getStudentListLoadingState().getValue() == Model.LoadingState.loading);
-//        Model.instance.getStudentListLoadingState().observe(getViewLifecycleOwner(), loadingState -> {
-//            swipeRefresh.setRefreshing(loadingState == Model.LoadingState.loading);
-//        });
         return view;
+
     }
 
     public void onClick(View v) {
@@ -129,61 +120,17 @@ public class Home_Page extends Fragment implements View.OnClickListener{
             case R.id.add_new_post_from_homepage1:
                 Navigation.findNavController(view).navigate(Home_PageDirections.actionHomePageToAddNewPost());
                 break;
-            case R.id.personalArea2:
+            case R.id.personalA_in_hobby_details:
                 Navigation.findNavController(view).navigate(Home_PageDirections.actionHomePageToPersonalAreaDetails2());
                 break;
         }
     }
 
-    private void refreshData() {
-
-    }
-
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        //לסדרinflater.inflate(R.menu.pet_list ,menu);
+        inflater.inflate(R.menu.hobbizList, menu);
     }
 
-    class MyViewHolder extends RecyclerView.ViewHolder{
-        TextView city, name, age;
-        ImageView img;
-        Button moreInfoBtn;
 
-        public MyViewHolder(@NonNull View itemView, OnItemClickListener listener) {
-            super(itemView);
-            name = itemView.findViewById(R.id.name_on_card);
-            city = itemView.findViewById(R.id.city_on_card);
-            age = itemView.findViewById(R.id.age_on_card);
-            moreInfoBtn = itemView.findViewById(R.id.imageButton4);
-            img = itemView.findViewById(R.id.list_row_avatar);
-
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int pos = getAdapterPosition();
-                    if (listener != null) {
-                        listener.onItemClick(pos,v);
-                    }
-                }
-            });
-        }
-
-        public void bind(Hobbiz hoby){
-            city.setText(hoby.getCity());
-            age.setText(hoby.getAge());
-            name.setText(hoby.getHobby_Name());
-            String url = hoby.getImage().toString();
-            if (url != null && !url.equals("")) {
-                Picasso.get()
-                        .load(url)
-                        .placeholder(R.drawable.tennis)
-                        .into(img);
-            }
-        }
-    }
-
-    interface OnItemClickListener {
-        void onItemClick(int position, View v);
-    }
 }

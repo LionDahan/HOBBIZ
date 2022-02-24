@@ -58,6 +58,9 @@
         <action
             android:id="@+id/action_hobby_Details_Page_to_personal_Area_Details"
             app:destination="@id/personal_Area_Details" />
+        <argument
+            android:name="hobby"
+            app:argType="com.example.hobbiz.Model.Hobbiz" />
     </fragment>
     <fragment
         android:id="@+id/personal_Area_Details"
@@ -73,6 +76,9 @@
         <action
             android:id="@+id/action_personal_Area_Details_to_login_page"
             app:destination="@id/login_page" />
+        <argument
+            android:name="user"
+            app:argType="com.example.hobbiz.Model.User" />
     </fragment>
     <fragment
         android:id="@+id/my_Post"

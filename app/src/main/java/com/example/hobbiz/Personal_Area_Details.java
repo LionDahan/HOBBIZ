@@ -1,64 +1,83 @@
 package com.example.hobbiz;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ProgressBar;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link Personal_Area_Details#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class Personal_Area_Details extends Fragment {
+import com.example.hobbiz.Model.Recycler.MyAdapter;
+import com.example.hobbiz.Model.User;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+public class Personal_Area_Details extends Fragment implements View.OnClickListener {
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public Personal_Area_Details() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment Personal_Area_Details.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static Personal_Area_Details newInstance(String param1, String param2) {
-        Personal_Area_Details fragment = new Personal_Area_Details();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    ImageButton addPost;
+    View view;
+    EditText FullName;
+    User user;
+    MyAdapter adapter;
+    ProgressBar progressbar;
+    SwipeRefreshLayout swipeRefresh;
+    PersonalAreaViewModel viewModel;
+    Button logout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        viewModel =  new ViewModelProvider(this).get(PersonalAreaViewModel.class);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_personal__area__details, container, false);
+        view = inflater.inflate(R.layout.fragment_personal__area__details, container, false);
+        user = .fromBundle(getArguments()).getUser();
+
+        viewModel.setData(user);
+        addPost = view.findViewById(R.id.add_post_btn);
+        FullName = view.findViewById(R.id.edit_name_txt);
+        progressbar=view.findViewById(R.id.progressBar_in_personalArea);
+        swipeRefresh=view.findViewById(R.id.hobby_swipe_refresh);
+        logout=view.findViewById(R.id.logOut_from_personalArea);
+
+        addPost.setOnClickListener(this);
+        logout.setOnClickListener(this);
+        return view;
+    }
+
+    public void onClick(View v) {
+        switch(v.getId()) {
+            case R.id.add_post_btn:
+                Navigation.findNavController(view).navigate(Personal_Area_DetailsDirections.actionPersonalAreaDetailsToAddNewPost());
+                break;
+
+            case R.id.logOut_from_personalArea:
+                SharedPreferences sp = getActivity().getSharedPreferences("Login", Context.MODE_PRIVATE);
+                SharedPreferences.Editor Ed=sp.edit();
+                Ed.remove("email");
+                Ed.remove("password");
+                Ed.commit();
+
+                Navigation.findNavController(view).navigate(Personal_Area_DetailsDirections.actionPersonalAreaDetailsToLoginPage());
+
+        }
+    }
+
+
+    private void updateUserProfile() {
+        FullName.setText(user.getFullName());
+        progressbar.setVisibility(View.GONE);
+
     }
 }

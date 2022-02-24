@@ -1,22 +1,20 @@
 package com.example.hobbiz.Model;
-import com.example.hobbiz.MyApplication;
-import com.google.firebase.Timestamp;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.provider.SyncStateContract;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import com.example.hobbiz.MyApplication;
+import com.google.firebase.Timestamp;
+
 import java.util.Map;
-
-import kotlin.text.UStringsKt;
-
+@Entity
 public class Hobbiz implements Parcelable {
     @PrimaryKey
     @NonNull

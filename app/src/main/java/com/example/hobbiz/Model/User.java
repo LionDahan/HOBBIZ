@@ -1,12 +1,25 @@
 package com.example.hobbiz.Model;
 
-public class User {
+import android.os.Parcel;
+import android.os.Parcelable;
+import androidx.room.Entity;
+import java.util.Map;
+
+@Entity
+public class User implements Parcelable {
     String email, userName;
 
+
     public User(){}
+
     public User(String email, String userName ){
         this.email = email;
         this.userName = userName;
+
+    }
+    protected User(Parcel in){
+        email = in.readString();
+        userName = in.readString();
 
     }
 
@@ -26,5 +39,33 @@ public class User {
         this.userName = userName;
     }
 
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
 
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
+
+    static User fromJson(Map<String,Object> json) {
+        String name = (String)json.get("full_name");
+        String email = (String)json.get("e_mail");
+        User u = new User(name, email);
+        return u;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int flags) {
+        parcel.writeString(email);
+        parcel.writeString(userName);
+    }
 }
