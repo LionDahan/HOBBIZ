@@ -21,7 +21,7 @@ import android.widget.Toast;
 
 import com.example.hobbiz.Model.DataModel;
 import com.example.hobbiz.Model.Hobbiz;
-import com.example.hobbiz.Model.DataModel.UploadHobbyListener;
+import com.example.hobbiz.Model.Interfaces.UploadHobbyListener;
 import com.google.android.gms.tasks.Task;
 
 

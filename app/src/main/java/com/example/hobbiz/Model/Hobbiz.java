@@ -38,27 +38,10 @@ public class Hobbiz implements Parcelable {
 
     final static String TIME = "timestamp";
 
-    public Hobbiz(Parcel in) {
-        id = in.readString();
-        hobby_Name = in.readString();
-        city = in.readString();
-        age = in.readString();
-        contact = in.readString();
-        description = in.readString();
-        image = in.readString();
-
-        delete_flag = in.readByte() != 0;
-        if (in.readByte() == 0) {
-            lastUpdated = null;
-        } else {
-            lastUpdated = in.readLong();
-        }
-
-    }
 
     public String getId(){return id;}
 
-    public void setID(String id){this.id= id;}
+    public void setId(String id){this.id= id;}
 
     public String getHobby_Name() {
         return hobby_Name;
@@ -127,7 +110,8 @@ public class Hobbiz implements Parcelable {
         return hobby;
     }
     static Long getLocalLastUpdated(){
-        Long localLastUpdate = MyApplication.getContext().getSharedPreferences("TAG", Context.MODE_PRIVATE)
+        Long localLastUpdate = MyApplication.getContext()
+                .getSharedPreferences("TAG", Context.MODE_PRIVATE)
                 .getLong("HOBBIZ_LAST_UPDATE",0);
         return localLastUpdate;
     }
@@ -135,9 +119,8 @@ public class Hobbiz implements Parcelable {
     static void setLocalLastUpdated(Long date){
         SharedPreferences.Editor editor = MyApplication.getContext()
                 .getSharedPreferences("TAG", Context.MODE_PRIVATE).edit();
-        editor.putLong("STUDENTS_LAST_UPDATE",date);
+        editor.putLong("HOBBIZ_LAST_UPDATE",date);
         editor.commit();
-        Log.d("TAG", "new lud " + date);
     }
 
     public Long getLastUpdated(){return lastUpdated;}
@@ -175,6 +158,24 @@ public class Hobbiz implements Parcelable {
             parcel.writeByte((byte) 1);
             parcel.writeLong(lastUpdated);
         }
+    }
+
+    public Hobbiz(Parcel in) {
+        id = in.readString();
+        hobby_Name = in.readString();
+        city = in.readString();
+        age = in.readString();
+        contact = in.readString();
+        description = in.readString();
+        image = in.readString();
+
+        delete_flag = in.readByte() != 0;
+        if (in.readByte() == 0) {
+            lastUpdated = null;
+        } else {
+            lastUpdated = in.readLong();
+        }
+
     }
 
 

@@ -1,6 +1,7 @@
 package com.example.hobbiz;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -26,6 +27,7 @@ import com.example.hobbiz.Model.Interfaces.OnItemClickListener;
 import com.example.hobbiz.Model.Model;
 import com.example.hobbiz.Model.Hobbiz;
 import com.example.hobbiz.Model.Recycler.MyAdapter;
+import com.example.hobbiz.Model.User;
 
 import java.util.List;
 
@@ -54,8 +56,17 @@ public class Home_Page extends Fragment implements View.OnClickListener{
         swipeRefresh= view.findViewById(R.id.hobby_list_swipe_refresh);
         addPost= view.findViewById(R.id.add_new_post_from_homepage1);
         toProfile= view.findViewById(R.id.personalA_in_hobby_details);
+
+
+        SharedPreferences sp = getActivity().getSharedPreferences("Login", Context.MODE_PRIVATE);
+        String userId = sp.getString("userID", null);
+        if(userId!=null){
+
+        }
         addPost.setOnClickListener(this);
         toProfile.setOnClickListener(this);
+
+
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -68,6 +79,7 @@ public class Home_Page extends Fragment implements View.OnClickListener{
         LinearLayoutManager linearLayoutManager= new LinearLayoutManager(getContext());
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(hobiz_list.getContext(), linearLayoutManager.getOrientation());
         adapter= new MyAdapter();
+
         hobiz_list.setHasFixedSize(true);
         hobiz_list.setAdapter(adapter);
         hobiz_list.setLayoutManager(linearLayoutManager);
@@ -97,16 +109,22 @@ public class Home_Page extends Fragment implements View.OnClickListener{
         });
 
         swipeRefresh.setRefreshing(Model.instance.getHobbizLoadingState().getValue()== Model.LoadingState.loading);
+
         Model.instance.getHobbizLoadingState().observe(getViewLifecycleOwner(), loadingState -> {
             swipeRefresh.setRefreshing(loadingState == Model.LoadingState.loading);
         });
+
+
         view.setFocusableInTouchMode(true);
         view.requestFocus();
+
         view.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if(event.getAction()== KeyEvent.ACTION_DOWN){
-                    return true;
+                    if(keyCode== KeyEvent.KEYCODE_BACK) {
+                        return true;
+                    }
                 }
                 return false;
             }
@@ -121,7 +139,7 @@ public class Home_Page extends Fragment implements View.OnClickListener{
                 Navigation.findNavController(view).navigate(Home_PageDirections.actionHomePageToAddNewPost());
                 break;
             case R.id.personalA_in_hobby_details:
-                Navigation.findNavController(view).navigate(Home_PageDirections.actionHomePageToPersonalAreaDetails2());
+                Navigation.findNavController(view).navigate(Home_PageDirections.actionHomePageToPersonalAreaDetails2(new User()));
                 break;
         }
     }
@@ -129,7 +147,7 @@ public class Home_Page extends Fragment implements View.OnClickListener{
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.hobbizList, menu);
+        inflater.inflate(R.menu.hobbiz_list, menu);
     }
 
 

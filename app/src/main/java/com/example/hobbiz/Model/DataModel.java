@@ -6,6 +6,8 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.example.hobbiz.Model.Interfaces.GetUserById;
+import com.example.hobbiz.Model.Interfaces.UploadHobbyListener;
 import com.example.hobbiz.Model.Interfaces.UploadImageListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -72,10 +74,6 @@ public class DataModel {
                 });
     }
 
-    public interface UploadHobbyListener {
-        void onComplete(Task task, Hobbiz hobbiz);
-    }
-
     public void uploadHobby(Hobbiz hobbiz, Bitmap bitmap, UploadHobbyListener listener) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         Map<String, Object> dataModelHobby = new HashMap<>();
@@ -131,7 +129,7 @@ public class DataModel {
                 DocumentSnapshot document = task.getResult();
                 if(document.exists()){
                     Hobbiz h = Hobbiz.HobbizFromJson(document.getData());
-                    h.setID(document.getId());
+                    h.setId(document.getId());
                 }
             }
         });
@@ -139,6 +137,23 @@ public class DataModel {
 
     public interface GetAllHobbizListener{
         void onComplete(List<Hobbiz> data);
+    }
+    public void getUserById(String uid, GetUserById listener) {
+
+        DocumentReference docRef = db.collection(Constants.MODEL_FIRE_BASE_USER_COLLECTION).document(uid);
+        docRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
+                    User u = User.fromJson(document.getData());
+                    listener.onComplete(u);
+                } else {
+                    listener.onComplete(null);
+                }
+            } else {
+                listener.onComplete(null);
+            }
+        });
     }
 
     public void getAllHobbiz(Long since, GetAllHobbizListener listener) {
@@ -150,9 +165,9 @@ public class DataModel {
                 if(task.isSuccessful()) {
                     for (QueryDocumentSnapshot doc: task.getResult()) {
                         Hobbiz h = Hobbiz.HobbizFromJson(doc.getData());
-                        h.setID(doc.getId());
-
+                        h.setId(doc.getId());
                         if (h != null) {
+                            Log.d("e", h.getAge() + "");
                             hobbizList.add(h);
                         }
                     }

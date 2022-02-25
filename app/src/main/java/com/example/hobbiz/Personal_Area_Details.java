@@ -42,7 +42,7 @@ public class Personal_Area_Details extends Fragment implements View.OnClickListe
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_personal__area__details, container, false);
-        user = .fromBundle(getArguments()).getUser();
+        user = Personal_Area_DetailsArgs.fromBundle(getArguments()).getUser();
 
         viewModel.setData(user);
         addPost = view.findViewById(R.id.add_post_btn);

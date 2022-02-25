@@ -1,5 +1,7 @@
 package com.example.hobbiz;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -94,6 +96,14 @@ public class Login_page extends Fragment implements View.OnClickListener {
             @Override
             public void onComplete(FirebaseUser user, Task<AuthResult> task) {
                 if(task.isSuccessful()) {
+
+                    SharedPreferences sp = getActivity().getSharedPreferences("login", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sp.edit();
+                    editor.putString("email", email_user);
+                    editor.putString("password", password_user);
+                    editor.putString("userID", user.getUid());
+                    editor.commit();
+
                     Navigation.findNavController(view).navigate(Login_pageDirections.actionLoginPageToHomePage2());
                 }else {
                     setEnabled(true);

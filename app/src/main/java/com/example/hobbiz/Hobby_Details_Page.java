@@ -35,7 +35,7 @@ public class Hobby_Details_Page extends Fragment implements View.OnClickListener
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        hobby = getDetails_FragmentArgs.fromBundle(getArguments()).getPet();
+        hobby = Hobby_Details_PageArgs.fromBundle(getArguments()).getHobby();
     }
 
     @Override
@@ -53,8 +53,8 @@ public class Hobby_Details_Page extends Fragment implements View.OnClickListener
         progressBar = view.findViewById(R.id.progressBar_in_personalArea);
 
         toProfile.setOnClickListener(this);
-        name.setText( hobby.getHobby_Name()+ "Class");
-        city.setText("City: " + hobby.getCity());
+        name.setText( hobby.getHobby_Name()+ " Class");
+        city.setText(  hobby.getCity());
         ages.setText("Ages: " + hobby.getAge());
         contact.setText("Contact: " + hobby.getContact());
         description.setText("Description: " + hobby.getDescription());
