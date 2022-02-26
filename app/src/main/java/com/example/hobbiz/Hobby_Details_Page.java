@@ -53,11 +53,11 @@ public class Hobby_Details_Page extends Fragment implements View.OnClickListener
         progressBar = view.findViewById(R.id.progressBar_in_personalArea);
 
         toProfile.setOnClickListener(this);
-        name.setText( hobby.getHobby_Name()+ " Class");
+        name.setText( hobby.getHobby_Name());
         city.setText(  hobby.getCity());
-        ages.setText("Ages: " + hobby.getAge());
-        contact.setText("Contact: " + hobby.getContact());
-        description.setText("Description: " + hobby.getDescription());
+        ages.setText(hobby.getAge());
+        contact.setText(hobby.getContact());
+        description.setText(hobby.getDescription());
 
         hobbyImage.setImageResource(R.drawable.tennis);
         Log.d("",hobby.getImage());
