@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -22,7 +23,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
-;
 import com.example.hobbiz.Model.Interfaces.OnItemClickListener;
 import com.example.hobbiz.Model.Model;
 import com.example.hobbiz.Model.Hobbiz;
@@ -33,13 +33,13 @@ import java.util.List;
 
 
 public class Home_Page extends Fragment implements View.OnClickListener{
-    ImageButton addPost, toProfile;
-    View view;
-    HomePageViewModel viewModel;
-    SwipeRefreshLayout swipeRefresh;
-    ProgressBar prbar;
-    RecyclerView hobiz_list;
-    MyAdapter adapter;
+    private ImageButton addPost, toProfile;
+    private View view;
+    private HomePageViewModel viewModel;
+    private SwipeRefreshLayout swipeRefresh;
+    private ProgressBar prbar;
+    private RecyclerView hobiz_list;
+    private MyAdapter adapter;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -104,7 +104,7 @@ public class Home_Page extends Fragment implements View.OnClickListener{
                 Hobbiz hobby = viewModel.getData().getValue().get(position);
                 Home_PageDirections.ActionHomePageToHobbyDetailsPage action =
                         Home_PageDirections.actionHomePageToHobbyDetailsPage(hobby);
-                Navigation.findNavController(v).navigate(action);
+                Navigation.findNavController(v).navigate((NavDirections) action);
             }
         });
 
@@ -139,7 +139,7 @@ public class Home_Page extends Fragment implements View.OnClickListener{
                 Navigation.findNavController(view).navigate(Home_PageDirections.actionHomePageToAddNewPost());
                 break;
             case R.id.personalA_in_hobby_details:
-                Navigation.findNavController(view).navigate(Home_PageDirections.actionHomePageToPersonalAreaDetails2(new User()));
+                Navigation.findNavController(view).navigate((NavDirections) Home_PageDirections.actionHomePageToPersonalAreaDetails2(new User()));
                 break;
         }
     }

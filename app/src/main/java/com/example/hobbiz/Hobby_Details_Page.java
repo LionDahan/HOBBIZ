@@ -25,12 +25,12 @@ import com.squareup.picasso.Picasso;
 
 
 public class Hobby_Details_Page extends Fragment implements View.OnClickListener {
-    ImageButton toProfile;
-    View view;
-    Hobbiz hobby;
-    ProgressBar progressBar;
-    ImageView hobbyImage;
-    TextView name, city, ages, contact, description;
+    private ImageButton toProfile;
+    private View view;
+    private Hobbiz hobby;
+    private ProgressBar progressBar;
+    private ImageView hobbyImage;
+    private TextView name, city, ages, contact, description;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

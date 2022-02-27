@@ -2,14 +2,14 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/nav_graf"
+    android:id="@+id/nav_graph"
     app:startDestination="@id/login_page">
 
     <fragment
         android:id="@+id/login_page"
         android:name="com.example.hobbiz.Login_page"
         android:label="fragment_login_page"
-        tools:layout="@layout/fragment_login_page" >
+        tools:layout="@layout/fragment_login_page">
         <action
             android:id="@+id/action_login_page_to_signUP_page"
             app:destination="@id/signUP_page" />

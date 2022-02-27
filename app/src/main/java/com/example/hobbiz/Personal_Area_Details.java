@@ -22,15 +22,15 @@ import com.example.hobbiz.Model.User;
 
 public class Personal_Area_Details extends Fragment implements View.OnClickListener {
 
-    ImageButton addPost;
-    View view;
-    EditText FullName;
-    User user;
-    MyAdapter adapter;
-    ProgressBar progressbar;
-    SwipeRefreshLayout swipeRefresh;
-    PersonalAreaViewModel viewModel;
-    Button logout;
+    private ImageButton addPost;
+    private View view;
+    private EditText FullName;
+    private User user;
+    private MyAdapter adapter;
+    private ProgressBar progressbar;
+    private SwipeRefreshLayout swipeRefresh;
+    private PersonalAreaViewModel viewModel;
+    private Button logout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

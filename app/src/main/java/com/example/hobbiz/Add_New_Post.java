@@ -27,11 +27,11 @@ import com.google.android.gms.tasks.Task;
 
 public class Add_New_Post extends Fragment implements View.OnClickListener {
     static final int REQUEST_IMAGE_CAPTURE = 1;
-    ImageButton save, cancel, add_pic;
-     EditText city, ages, name, contact, description;
-     ProgressBar progressBar;
-     View view;
-     Bitmap bitmap;
+    private ImageButton save, cancel, add_pic;
+    private EditText city, ages, name, contact, description;
+    private ProgressBar progressBar;
+    private View view;
+    private Bitmap bitmap;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

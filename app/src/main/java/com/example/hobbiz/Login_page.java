@@ -26,15 +26,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class Login_page extends Fragment implements View.OnClickListener {
-    ProgressBar progressBar;
-    Button login_btn, signUp_btn;
-    EditText email, password;
-    View view;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
+    private ProgressBar progressBar;
+    private Button login_btn, signUp_btn;
+    private EditText email, password;
+    private View view;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
