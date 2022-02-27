@@ -14,5 +14,8 @@ public class Constants {
     public final static String DESCRIPTION = "description";
     public final static String AGE = "age";
     public final static String TIME = "timestamp";
+    public final static String USER = "user";
+    public final static String EMAIL = "email";
+    public final static String NAME = "user_name";
 }
 

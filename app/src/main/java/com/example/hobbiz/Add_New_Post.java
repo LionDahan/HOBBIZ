@@ -44,12 +44,12 @@ public class Add_New_Post extends Fragment implements View.OnClickListener {
         // Inflate the layout for this fragment
         view= inflater.inflate(R.layout.fragment_add__new__post, container, false);
         cancel = view.findViewById(R.id.cancel_btn);
-        save= view.findViewById(R.id.save_btn);
-        name= view.findViewById(R.id.ages_in_details_page);
+        save= view.findViewById(R.id.save_in_edit_post);
+        name= view.findViewById(R.id.age_in_details_page);
         ages =view.findViewById(R.id.city_in_details_page);
         city =view.findViewById(R.id.contact_in_details_page);
         contact=view.findViewById(R.id.description_in_details_page);
-        description=view.findViewById(R.id.description_txt);
+        description=view.findViewById(R.id.description_in_add_post);
         progressBar= view.findViewById(R.id.progresbar_in_add_post);
         add_pic = view.findViewById(R.id.image_in_details_page);
         cancel.setOnClickListener(this);
@@ -66,7 +66,7 @@ public class Add_New_Post extends Fragment implements View.OnClickListener {
             case R.id.image_in_details_page:
                 uploadImage();
                 break;
-            case R.id.save_btn:
+            case R.id.save_in_edit_post:
                 savePost();
                 break;
         }

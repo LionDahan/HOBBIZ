@@ -1,18 +1,14 @@
 package com.example.hobbiz;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
@@ -20,7 +16,6 @@ import androidx.navigation.Navigation;
 
 import com.example.hobbiz.Model.User;
 import com.example.hobbiz.Model.Hobbiz;
-import com.google.android.gms.tasks.Task;
 import com.squareup.picasso.Picasso;
 
 
@@ -46,7 +41,7 @@ public class Hobby_Details_Page extends Fragment implements View.OnClickListener
         toProfile = view.findViewById(R.id.personalA_in_hobby_details);
         name = view.findViewById(R.id.title_in_details_page);
         city = view.findViewById(R.id.city_in_details_page);
-        ages = view.findViewById(R.id.ages_in_details_page);
+        ages = view.findViewById(R.id.age_in_details_page);
         contact = view.findViewById(R.id.contact_in_details_page);
         description= view.findViewById(R.id.description_in_details_page);
         hobbyImage = view.findViewById(R.id.image_in_details_page);
@@ -72,7 +67,6 @@ public class Hobby_Details_Page extends Fragment implements View.OnClickListener
             case R.id.personalA_in_hobby_details:
                 Navigation.findNavController(view).navigate(Hobby_Details_PageDirections.actionHobbyDetailsPageToPersonalAreaDetails(new User()));
                 break;
-
 
         }
     }

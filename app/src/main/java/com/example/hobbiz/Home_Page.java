@@ -23,6 +23,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 ;
+import com.example.hobbiz.Model.Interfaces.GetUserById;
 import com.example.hobbiz.Model.Interfaces.OnItemClickListener;
 import com.example.hobbiz.Model.Model;
 import com.example.hobbiz.Model.Hobbiz;
@@ -40,6 +41,7 @@ public class Home_Page extends Fragment implements View.OnClickListener{
     ProgressBar prbar;
     RecyclerView hobiz_list;
     MyAdapter adapter;
+    User now_user;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -61,6 +63,12 @@ public class Home_Page extends Fragment implements View.OnClickListener{
         SharedPreferences sp = getActivity().getSharedPreferences("Login", Context.MODE_PRIVATE);
         String userId = sp.getString("userID", null);
         if(userId!=null){
+            Model.instance.getUserById(userId, new GetUserById() {
+                @Override
+                public void onComplete(User user) {
+                    now_user= user;
+                }
+            });
 
         }
         addPost.setOnClickListener(this);
@@ -139,7 +147,7 @@ public class Home_Page extends Fragment implements View.OnClickListener{
                 Navigation.findNavController(view).navigate(Home_PageDirections.actionHomePageToAddNewPost());
                 break;
             case R.id.personalA_in_hobby_details:
-                Navigation.findNavController(view).navigate(Home_PageDirections.actionHomePageToPersonalAreaDetails2(new User()));
+                Navigation.findNavController(view).navigate(Home_PageDirections.actionHomePageToPersonalAreaDetails2(now_user));
                 break;
         }
     }

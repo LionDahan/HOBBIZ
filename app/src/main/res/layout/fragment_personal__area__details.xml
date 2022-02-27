@@ -53,12 +53,12 @@
         app:layout_constraintTop_toBottomOf="@+id/personal_area_image" />
 
     <EditText
-        android:id="@+id/edit_age_txt"
+        android:id="@+id/edit_email"
         android:layout_width="216dp"
         android:layout_height="42dp"
         android:layout_marginStart="6dp"
         android:layout_marginTop="12dp"
-        android:text="Age:"
+        android:text="Email:"
         android:textColor="@color/purple_500"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -76,49 +76,20 @@
         android:src="@drawable/edit_btn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.074"
-        app:layout_constraintStart_toEndOf="@+id/edit_age_txt"
+        app:layout_constraintStart_toEndOf="@+id/edit_email"
         app:layout_constraintTop_toBottomOf="@+id/edit_pic" />
-
-    <EditText
-        android:id="@+id/edit_password_txt"
-        android:layout_width="216dp"
-        android:layout_height="42dp"
-        android:layout_marginStart="6dp"
-        android:layout_marginTop="12dp"
-        android:text="Password"
-        android:textColor="@color/purple_500"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.083"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_age_txt">
-
-    </EditText>
-
-    <ImageView
-        android:id="@+id/imageView7"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="24dp"
-        android:src="@drawable/edit_btn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.021"
-        app:layout_constraintStart_toEndOf="@+id/edit_password_txt"
-        app:layout_constraintTop_toBottomOf="@+id/imageView6" />
 
     <TextView
         android:id="@+id/my_posts_view_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="TextView"
         android:textColor="@color/purple_500"
         android:textStyle="bold"
-        android:layout_marginTop="36dp"
-        android:text="TextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.062"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_password_txt" />
+        tools:layout_editor_absoluteY="402dp" />
 
     <ProgressBar
         android:id="@+id/progressBar_in_personalArea"

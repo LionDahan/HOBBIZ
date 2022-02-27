@@ -6,6 +6,7 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.hobbiz.Model.Interfaces.GetUserById;
 import com.example.hobbiz.Model.Interfaces.UploadHobbyListener;
 import com.example.hobbiz.Model.Interfaces.UploadImageListener;
 import com.example.hobbiz.MyApplication;
@@ -85,5 +86,8 @@ public class Model {
                 listener.onComplete(task, hobby);
             }
         });
+    }
+    public void getUserById(String userId, GetUserById listener) {
+        fbModel.getUserById(userId,listener);
     }
 }
