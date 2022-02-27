@@ -9,8 +9,8 @@ import com.example.hobbiz.Model.User;
 import java.util.List;
 
 public class PersonalAreaViewModel extends ViewModel {
-    LiveData<List<Hobbiz>> data;
-    User user;
+    private LiveData<List<Hobbiz>> data;
+    private User user;
 
     public LiveData<List<Hobbiz>> getData() {
         return data;

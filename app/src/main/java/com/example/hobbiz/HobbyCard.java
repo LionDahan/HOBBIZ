@@ -9,9 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
-public class hobyCard extends Fragment {
+public class HobbyCard extends Fragment {
 
-    public hobyCard() {
+    public HobbyCard() {
         // Required empty public constructor
     }
 

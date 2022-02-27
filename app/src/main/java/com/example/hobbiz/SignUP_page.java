@@ -24,10 +24,10 @@ import com.google.firebase.auth.FirebaseUser;
 
 
 public class SignUP_page extends Fragment implements View.OnClickListener{
-    View view;
-    Button sign_up_btn, sign_in_btn;
-    ProgressBar progressBar;
-    EditText name_input, email_input, password_input;
+    private View view;
+    private Button sign_up_btn, sign_in_btn;
+    private ProgressBar progressBar;
+    private EditText name_input, email_input, password_input;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
