@@ -121,7 +121,6 @@ public class Add_New_Post extends Fragment implements View.OnClickListener {
                 if (hobby.getImage() != null){
                     Toast.makeText(getActivity(), "Upload Success", Toast.LENGTH_LONG).show();
                     Navigation.findNavController(view).navigateUp();
-
                 } else{
                     Toast.makeText(getActivity(),"Upload Failed", Toast.LENGTH_LONG).show();
                 }
