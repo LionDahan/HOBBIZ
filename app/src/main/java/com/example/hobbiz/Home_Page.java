@@ -34,14 +34,14 @@ import java.util.List;
 
 
 public class Home_Page extends Fragment implements View.OnClickListener{
-    ImageButton addPost, toProfile;
-    View view;
-    HomePageViewModel viewModel;
-    SwipeRefreshLayout swipeRefresh;
-    ProgressBar prbar;
-    RecyclerView hobiz_list;
-    MyAdapter adapter;
-    User now_user;
+    private ImageButton addPost, toProfile;
+    private View view;
+    private HomePageViewModel viewModel;
+    private SwipeRefreshLayout swipeRefresh;
+    private ProgressBar prbar;
+    private RecyclerView hobiz_list;
+    private MyAdapter adapter;
+    private User now_user;
 
     @Override
     public void onAttach(@NonNull Context context) {

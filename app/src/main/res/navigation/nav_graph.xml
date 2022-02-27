@@ -12,7 +12,8 @@
         tools:layout="@layout/fragment_login_page">
         <action
             android:id="@+id/action_login_page_to_signUP_page"
-            app:destination="@id/signUP_page" />
+            app:destination="@id/signUP_page"
+            app:popUpTo="@id/login_page" />
         <action
             android:id="@+id/action_login_page_to_home_Page2"
             app:destination="@id/home_Page" />
