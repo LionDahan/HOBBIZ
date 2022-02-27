@@ -12,7 +12,6 @@ public class HobyCardViewHolder extends RecyclerView.ViewHolder {
     private ImageView imageView;
     public HobyCardViewHolder(@NonNull View itemView){
         super(itemView);
-
     }
 
 }

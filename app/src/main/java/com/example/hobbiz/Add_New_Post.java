@@ -115,12 +115,13 @@ public class Add_New_Post extends Fragment implements View.OnClickListener {
         SharedPreferences sp= getActivity().getSharedPreferences("login", Context.MODE_PRIVATE);
         String userId = sp.getString("userId", null);
         hobby.setUserId(userId);
-        DataModel.data_instence.uploadHobby(hobby, bitmap, new UploadHobbyListener() {
+        DataModel.data_instance.uploadHobby(hobby, bitmap, new UploadHobbyListener() {
             @Override
             public void onComplete(Task task, Hobbiz hobby) {
                 if (hobby.getImage() != null){
                     Toast.makeText(getActivity(), "Upload Success", Toast.LENGTH_LONG).show();
                     Navigation.findNavController(view).navigateUp();
+
                 } else{
                     Toast.makeText(getActivity(),"Upload Failed", Toast.LENGTH_LONG).show();
                 }

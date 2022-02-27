@@ -35,19 +35,13 @@ public class Hobbiz implements Parcelable {
         this.contact=contact;
         this.description= description;
     }
-
-
-
     final static String TIME = "timestamp";
-
 
     public String getId(){return id;}
 
     public void setId(String id){this.id= id;}
 
-    public String getHobby_Name() {
-        return hobby_Name;
-    }
+    public String getHobby_Name() { return hobby_Name; }
 
     public String getCity() {
         return city;

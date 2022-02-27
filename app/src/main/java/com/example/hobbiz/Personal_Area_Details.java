@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +39,7 @@ public class Personal_Area_Details extends Fragment implements View.OnClickListe
 
     ImageButton addPost;
     View view;
-    EditText name, age, email;
+    TextView name, email;
     User user1;
     MyAdapter adapter;
     RecyclerView recyclerView;
@@ -47,17 +48,13 @@ public class Personal_Area_Details extends Fragment implements View.OnClickListe
     PersonalAreaViewModel viewModel;
     Button logout;
 
-//    @Override
-//    public void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        viewModel =  new ViewModelProvider(this).get(PersonalAreaViewModel.class);
-//    }
-
     @Override
-    public void onAttach(@NonNull Context context){
-        super.onAttach(context);
-        viewModel= new  ViewModelProvider(this).get(PersonalAreaViewModel.class);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        viewModel =  new ViewModelProvider(this).get(PersonalAreaViewModel.class);
+        user1= Personal_Area_DetailsArgs.fromBundle(getArguments()).getUser();
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -65,10 +62,12 @@ public class Personal_Area_Details extends Fragment implements View.OnClickListe
         SharedPreferences sp= getActivity().getSharedPreferences("login", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
 
-        viewModel.setData(user1);
+        viewModel.setData(user1.getId());
         addPost = view.findViewById(R.id.add_post_btn);
-        name = view.findViewById(R.id.edit_name_txt);
-        email= view.findViewById(R.id.edit_email);
+        name = view.findViewById(R.id.userName_Tv);
+        name.setText(user1.getFullName());
+        email= view.findViewById(R.id.userName_Tv);
+        name.setText(user1.getEmail());
         progressbar=view.findViewById(R.id.progressBar_in_personalArea);
         swipeRefresh=view.findViewById(R.id.hobby_swipe_refresh);
         logout=view.findViewById(R.id.logOut_from_personalArea);
@@ -87,33 +86,25 @@ public class Personal_Area_Details extends Fragment implements View.OnClickListe
         recyclerView.addItemDecoration(dividerItemDecoration);
 
 
-        viewModel.getData().observe(getViewLifecycleOwner(), new Observer<List<Hobbiz>>() {
-            @Override
-            public void onChanged(List<Hobbiz> products) {
-                adapter.setFragment(Personal_Area_Details.this);
-                adapter.setData(products);
-                adapter.notifyDataSetChanged();
-                progressbar.setVisibility(View.GONE);
-            }
+        viewModel.getData().observe(getViewLifecycleOwner(), posts -> {
+            adapter.setFragment(Personal_Area_Details.this);
+            adapter.setData(posts);
+            adapter.notifyDataSetChanged();
+            progressbar.setVisibility(View.INVISIBLE);
         });
 
-        adapter.setOnItemClickListener(new OnItemClickListener() {
-            @Override
-            public void onItemClick(int position, View v) {
-                Hobbiz hobby = viewModel.getData().getValue().get(position);
-                Home_PageDirections.ActionHomePageToHobbyDetailsPage action = Home_PageDirections.actionHomePageToHobbyDetailsPage(hobby);
-                Navigation.findNavController(v).navigate(action);
-            }
+        adapter.setOnItemClickListener((position, v) -> {
+            Hobbiz hobby = viewModel.getData().getValue().get(position);
+            Personal_Area_DetailsDirections.ActionPersonalAreaDetailsToHobbyDetailsPage action =
+                    Personal_Area_DetailsDirections.actionPersonalAreaDetailsToHobbyDetailsPage(hobby);
+            Navigation.findNavController(v).navigate(action);
         });
 
-        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                swipeRefresh.setRefreshing(true);
-                Model.instance.reloadHobbysList();
-                adapter.notifyDataSetChanged();
-                swipeRefresh.setRefreshing(false);
-            }
+        swipeRefresh.setOnRefreshListener(() -> {
+            swipeRefresh.setRefreshing(true);
+            Model.instance.reloadHobbysList();
+            adapter.notifyDataSetChanged();
+            swipeRefresh.setRefreshing(false);
         });
 
         swipeRefresh.setRefreshing(Model.instance.getHobbizLoadingState().getValue() == Model.LoadingState.loading);
@@ -144,9 +135,4 @@ public class Personal_Area_Details extends Fragment implements View.OnClickListe
     }
 
 
-    private void updateUserProfile() {
-        name.setText(user1.getFullName());
-        progressbar.setVisibility(View.GONE);
-
-    }
 }

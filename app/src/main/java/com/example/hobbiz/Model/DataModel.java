@@ -36,7 +36,7 @@ import java.util.List;
 import java.util.Map;
 
 public class DataModel {
-    public static final DataModel data_instence = new DataModel();
+    public static final DataModel data_instance = new DataModel();
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -198,10 +198,10 @@ public class DataModel {
                     for (QueryDocumentSnapshot doc: task.getResult()) {
                         Hobbiz h = Hobbiz.HobbizFromJson(doc.getData());
                         h.setId(doc.getId());
-                        if (h != null) {
-                            Log.d("e", h.getAge() + "");
-                            hobbizList.add(h);
-                        }
+                        //if (h != null) {
+                        //    Log.d("e", h.getAge() + "");
+                       //     hobbizList.add(h);
+                       // }
                     }
 
                 }else {

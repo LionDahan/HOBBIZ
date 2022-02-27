@@ -20,7 +20,5 @@ public class PersonalAreaViewModel extends ViewModel {
     public void setData(String userId) {
         this.userId = userId;
         this.data = Model.instance.getUserHobbizByUserId(userId);
-
-
     }
 }

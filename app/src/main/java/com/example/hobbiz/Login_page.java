@@ -3,8 +3,10 @@ package com.example.hobbiz;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
+
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
 import com.example.hobbiz.Model.DataModel;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -99,7 +102,7 @@ public class Login_page extends Fragment implements View.OnClickListener {
 
     private void loginUser(String email, String password) {
 
-        DataModel.data_instence.loginUser(email, password, new DataModel.LoginUserListener() {
+        DataModel.data_instance.loginUser(email, password, new DataModel.LoginUserListener() {
             @Override
             public void onComplete(FirebaseUser user, Task<AuthResult> task) {
                 if(task.isSuccessful()) {

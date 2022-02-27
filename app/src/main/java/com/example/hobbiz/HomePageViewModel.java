@@ -2,10 +2,8 @@ package com.example.hobbiz;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
-
 import com.example.hobbiz.Model.Hobbiz;
 import com.example.hobbiz.Model.Model;
-
 import java.util.List;
 //להמשיך פה חסר
 

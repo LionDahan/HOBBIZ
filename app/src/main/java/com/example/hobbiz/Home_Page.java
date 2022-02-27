@@ -41,7 +41,7 @@ public class Home_Page extends Fragment implements View.OnClickListener{
     private ProgressBar prbar;
     private RecyclerView hobiz_list;
     private MyAdapter adapter;
-    private User now_user;
+    private User curr_user;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -66,13 +66,13 @@ public class Home_Page extends Fragment implements View.OnClickListener{
             Model.instance.getUserById(userId, new GetUserById() {
                 @Override
                 public void onComplete(User user) {
-                    now_user= user;
+                    curr_user = user;
                 }
             });
 
         }
         else{
-            now_user= new User();
+            curr_user = new User();
         }
         addPost.setOnClickListener(this);
         toProfile.setOnClickListener(this);
@@ -150,7 +150,7 @@ public class Home_Page extends Fragment implements View.OnClickListener{
                 Navigation.findNavController(view).navigate(Home_PageDirections.actionHomePageToAddNewPost());
                 break;
             case R.id.personalA_in_hobby_details:
-                Navigation.findNavController(view).navigate(Home_PageDirections.actionHomePageToPersonalAreaDetails2(now_user));
+                Navigation.findNavController(view).navigate(Home_PageDirections.actionHomePageToPersonalAreaDetails2(curr_user));
                 break;
         }
     }
