@@ -1,9 +1,12 @@
 package com.example.hobbiz.Model;
 
 import android.content.SharedPreferences;
+import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+
 import java.util.Map;
 
 @Entity

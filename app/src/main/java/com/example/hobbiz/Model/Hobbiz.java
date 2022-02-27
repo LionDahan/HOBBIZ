@@ -12,14 +12,16 @@ import androidx.room.PrimaryKey;
 
 import com.example.hobbiz.MyApplication;
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.FieldValue;
 
+import java.util.HashMap;
 import java.util.Map;
 @Entity
 public class Hobbiz implements Parcelable {
     @PrimaryKey
     @NonNull
     private String id ="";
-    private String hobby_Name,age, city, contact, description, image;
+    private String hobby_Name,age, city, contact, description, image, userId;
     private boolean delete_flag;
 
     Long lastUpdated = new Long(0);
@@ -54,7 +56,11 @@ public class Hobbiz implements Parcelable {
     public String getAge() {
         return age;
     }
+    public String getUserId(){return userId;}
 
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
     public String getContact() {
         return contact;
@@ -100,6 +106,7 @@ public class Hobbiz implements Parcelable {
         String contact = (String) json.get("contact");
         String description = (String) json.get("description");
         String image= (String) json.get("image");
+        String userId= (String)json.get("userId");
 
 
         Hobbiz hobby = new Hobbiz(name,city,age,contact,description);
@@ -151,6 +158,7 @@ public class Hobbiz implements Parcelable {
         parcel.writeString(contact);
         parcel.writeString(description);
         parcel.writeString(image);
+        parcel.writeString(userId);
         parcel.writeByte((byte) (delete_flag ? 1 : 0));
         if (lastUpdated == null) {
             parcel.writeByte((byte) 0);
@@ -168,6 +176,7 @@ public class Hobbiz implements Parcelable {
         contact = in.readString();
         description = in.readString();
         image = in.readString();
+        userId= in.readString();
 
         delete_flag = in.readByte() != 0;
         if (in.readByte() == 0) {
@@ -176,6 +185,21 @@ public class Hobbiz implements Parcelable {
             lastUpdated = in.readLong();
         }
 
+    }
+    public Map<String, Object> toJson() {
+        Map<String, Object> dbHobby = new HashMap<>();
+
+        dbHobby.put("hobby_name", this.getHobby_Name());
+        dbHobby.put("city", this.getCity());
+        dbHobby.put("age", this.getAge());
+        dbHobby.put("contact", this.getContact());
+        dbHobby.put("description", this.getDescription());
+        dbHobby.put("timestamp", FieldValue.serverTimestamp());
+        dbHobby.put("image", this.getImage());
+        dbHobby.put("userId", userId);
+        dbHobby.put("delete_flag", isDelete_flag());
+
+        return dbHobby;
     }
 
 

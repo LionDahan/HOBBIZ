@@ -25,6 +25,11 @@ public class Login_page extends Fragment implements View.OnClickListener {
     private View view;
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -37,6 +42,13 @@ public class Login_page extends Fragment implements View.OnClickListener {
         progressBar= view.findViewById(R.id.progres_bar_in_sign_in);
         login_btn.setOnClickListener(this);
         signUp_btn.setOnClickListener(this);
+
+        SharedPreferences sp = getActivity().getSharedPreferences("login", Context.MODE_PRIVATE);
+        String email = sp.getString("email", null);
+        String password = sp.getString("password", null);
+        if(email != null && password != null ) {
+            loginUser(email, password);
+        }
 
         return view;
     }
@@ -80,15 +92,22 @@ public class Login_page extends Fragment implements View.OnClickListener {
         }
         progressBar.setVisibility(View.VISIBLE);
         setEnabled(false);
-        DataModel.data_instence.loginUser(email_user, password_user, new DataModel.LoginUserListener() {
+
+        loginUser(email_user, password_user);
+
+    }
+
+    private void loginUser(String email, String password) {
+
+        DataModel.data_instence.loginUser(email, password, new DataModel.LoginUserListener() {
             @Override
             public void onComplete(FirebaseUser user, Task<AuthResult> task) {
                 if(task.isSuccessful()) {
 
                     SharedPreferences sp = getActivity().getSharedPreferences("login", Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sp.edit();
-                    editor.putString("email", email_user);
-                    editor.putString("password", password_user);
+                    editor.putString("email", email);
+                    editor.putString("password", password);
                     editor.putString("userID", user.getUid());
                     editor.commit();
 
@@ -100,7 +119,6 @@ public class Login_page extends Fragment implements View.OnClickListener {
                 progressBar.setVisibility(View.GONE);
             }
         });
-
     }
 
 }

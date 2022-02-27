@@ -6,6 +6,8 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.hobbiz.Model.Interfaces.DeleteHobbyListener;
+import com.example.hobbiz.Model.Interfaces.EditHobbyListener;
 import com.example.hobbiz.Model.Interfaces.GetUserById;
 import com.example.hobbiz.Model.Interfaces.UploadHobbyListener;
 import com.example.hobbiz.Model.Interfaces.UploadImageListener;
@@ -42,13 +44,10 @@ public class Model {
 
     public void reloadHobbysList() {
         hobbizListLoadingState.setValue(LoadingState.loading);
-//        Long localLastUpdate = Hobbiz.getLocalLastUpdated();
-        Long localLastUpdate = new Long(0);
-
-        Log.d("TAG","localLastUpdate: " + localLastUpdate);
+        Long localLastUpdate = Hobbiz.getLocalLastUpdated();
 
 
-         fbModel.getAllHobbiz(localLastUpdate,(list)-> {
+        fbModel.getAllHobbiz(localLastUpdate,(list)-> {
             if(list != null) {
                 MyApplication.executorService.execute(()-> {
                     Long lastUpdate = new Long(0);
@@ -73,6 +72,7 @@ public class Model {
             }
         });
     }
+
     public void uploadImage(Bitmap bitmap, String name, final UploadImageListener listener){
         fbModel.uploadImage(bitmap,name,listener);
     }
@@ -89,5 +89,23 @@ public class Model {
     }
     public void getUserById(String userId, GetUserById listener) {
         fbModel.getUserById(userId,listener);
+    }
+    public LiveData<List<Hobbiz>> getUserHobbizByUserId(String userId){
+        return AppLocalDB.db.hobbizDao().getHobbyByUserId(userId);
+    }
+    public void editPost(Hobbiz hobbiz, Bitmap bitmap, EditHobbyListener listener) {
+        fbModel.editHobby(hobbiz, bitmap, listener);
+    }
+
+    public void deleteHobby(Hobbiz hobbiz, DeleteHobbyListener listener) {
+        hobbiz.setDelete_flag(true);
+        fbModel.deleteHobby(hobbiz, new DeleteHobbyListener() {
+            @Override
+            public void onComplete() {
+                hobbiz.setDelete_flag(true);
+                reloadHobbysList();
+                listener.onComplete();
+            }
+        });
     }
 }

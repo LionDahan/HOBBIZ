@@ -23,6 +23,6 @@ public interface HobbizDao {
     @Query("SELECT * FROM Hobbiz WHERE id=:id ")
     Hobbiz getHobby(String id);
 
-    @Query("SELECT * FROM Hobbiz WHERE hobby_Name=:name ")
-    LiveData<List<Hobbiz>> getHobbyByName(String name);
+    @Query("SELECT * FROM Hobbiz WHERE userId=:id ")
+    LiveData<List<Hobbiz>> getHobbyByUserId(String id);
 }

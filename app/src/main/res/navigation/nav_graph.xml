@@ -80,6 +80,9 @@
         <argument
             android:name="user"
             app:argType="com.example.hobbiz.Model.User" />
+        <action
+            android:id="@+id/action_personal_Area_Details_to_hobby_Details_Page"
+            app:destination="@id/hobby_Details_Page" />
     </fragment>
     <fragment
         android:id="@+id/my_Post"
@@ -101,6 +104,12 @@
         <action
             android:id="@+id/action_edit_Post_Page_to_personal_Area_Details"
             app:destination="@id/personal_Area_Details" />
+        <argument
+            android:name="hobby"
+            app:argType="com.example.hobbiz.Model.Hobbiz" />
+        <action
+            android:id="@+id/action_edit_Post_Page_to_home_Page"
+            app:destination="@id/home_Page" />
     </fragment>
     <fragment
         android:id="@+id/add_New_Post"

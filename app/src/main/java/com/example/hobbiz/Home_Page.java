@@ -71,6 +71,9 @@ public class Home_Page extends Fragment implements View.OnClickListener{
             });
 
         }
+        else{
+            now_user= new User();
+        }
         addPost.setOnClickListener(this);
         toProfile.setOnClickListener(this);
 

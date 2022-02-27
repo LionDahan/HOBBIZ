@@ -1,6 +1,8 @@
 package com.example.hobbiz;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 
@@ -43,27 +45,28 @@ public class Add_New_Post extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view= inflater.inflate(R.layout.fragment_add__new__post, container, false);
-        cancel = view.findViewById(R.id.cancel_btn);
+        cancel = view.findViewById(R.id.cancel_btn_in_edit);
         save= view.findViewById(R.id.save_in_edit_post);
-        name= view.findViewById(R.id.age_in_details_page);
-        ages =view.findViewById(R.id.city_in_details_page);
-        city =view.findViewById(R.id.contact_in_details_page);
-        contact=view.findViewById(R.id.description_in_details_page);
-        description=view.findViewById(R.id.description_in_add_post);
-        progressBar= view.findViewById(R.id.progresbar_in_add_post);
-        add_pic = view.findViewById(R.id.image_in_details_page);
+        name= view.findViewById(R.id.name_in_edit);
+        ages =view.findViewById(R.id.age_in_edit);
+        city =view.findViewById(R.id.city_in_edit);
+        contact=view.findViewById(R.id.contact_in_edit);
+        description=view.findViewById(R.id.description_in_edit);
+        progressBar= view.findViewById(R.id.progresbar_in_edit);
+        add_pic = view.findViewById(R.id.image_in_edit);
         cancel.setOnClickListener(this);
         save.setOnClickListener(this);
         add_pic.setOnClickListener(this);
+
 
         return view;
     }
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.cancel_btn:
+            case R.id.cancel_btn_in_edit:
                 Navigation.findNavController(view).navigateUp();
                 break;
-            case R.id.image_in_details_page:
+            case R.id.image_in_edit:
                 uploadImage();
                 break;
             case R.id.save_in_edit_post:
@@ -109,6 +112,9 @@ public class Add_New_Post extends Fragment implements View.OnClickListener {
         progressBar.setVisibility(View.VISIBLE);
 
         Hobbiz hobby = new Hobbiz(hobbyName_input,age_input,city_input, contact_input,description_input);
+        SharedPreferences sp= getActivity().getSharedPreferences("login", Context.MODE_PRIVATE);
+        String userId = sp.getString("userId", null);
+        hobby.setUserId(userId);
         DataModel.data_instence.uploadHobby(hobby, bitmap, new UploadHobbyListener() {
             @Override
             public void onComplete(Task task, Hobbiz hobby) {
