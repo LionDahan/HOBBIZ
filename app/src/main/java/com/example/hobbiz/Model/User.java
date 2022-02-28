@@ -40,9 +40,7 @@ public class User implements Parcelable{
         return id;
     }
 
-    public String getEmail() {
-        return email;
-    }
+    public String getEmail() { return email; }
 
     public String getFullName() {
         return userName;

@@ -8,11 +8,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class HobyCardViewHolder extends RecyclerView.ViewHolder {
-    TextView name, city, age;
-    ImageView imageView;
+    private TextView name, city, age;
+    private ImageView imageView;
     public HobyCardViewHolder(@NonNull View itemView){
         super(itemView);
-
     }
 
 }
