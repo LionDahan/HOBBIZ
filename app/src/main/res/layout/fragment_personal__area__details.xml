@@ -24,73 +24,35 @@
         android:src="@drawable/personal_area2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        />
 
-    <EditText
-        android:id="@+id/edit_name_txt"
-        android:layout_width="216dp"
-        android:layout_height="42dp"
-        android:layout_marginStart="6dp"
-        android:layout_marginTop="12dp"
-        android:text="Name"
+    <TextView
+        android:id="@+id/profile_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="email"
         android:textColor="@color/purple_500"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.083"
+        app:layout_constraintHorizontal_bias="0.062"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/personal_area_image" />
-
-    <ImageView
-        android:id="@+id/edit_pic"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="110dp"
-        android:src="@drawable/edit_btn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.297"
-        app:layout_constraintStart_toEndOf="@+id/edit_name_txt"
-        app:layout_constraintTop_toBottomOf="@+id/personal_area_image" />
-
-    <EditText
-        android:id="@+id/edit_email"
-        android:layout_width="216dp"
-        android:layout_height="42dp"
-        android:layout_marginStart="6dp"
-        android:layout_marginTop="12dp"
-        android:text="Email:"
-        android:textColor="@color/purple_500"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.083"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_name_txt">
-
-    </EditText>
-
-    <ImageView
-        android:id="@+id/imageView6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:src="@drawable/edit_btn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.074"
-        app:layout_constraintStart_toEndOf="@+id/edit_email"
-        app:layout_constraintTop_toBottomOf="@+id/edit_pic" />
+        app:layout_constraintTop_toBottomOf="@+id/personal_area_image"
+        />
 
     <TextView
         android:id="@+id/my_posts_view_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
-        android:text="TextView"
+        android:text="My Hobbiz"
         android:textColor="@color/purple_500"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.062"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_email" />
+        app:layout_constraintTop_toBottomOf="@+id/profile_email"
+        />
 
     <ProgressBar
         android:id="@+id/progressBar_in_personalArea"
@@ -103,24 +65,21 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/hobby_swipe_refresh"
+        android:id="@+id/hobby_swipe_refresh_personal"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="20sp"
+        app:layout_constraintTop_toBottomOf="@id/my_posts_view_text"
+        app:layout_constraintBottom_toTopOf="@id/add_post_btn"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintVertical_bias="0.0">
+        >
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/hobby_list_on_personal"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            />
 
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
@@ -130,11 +89,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="LogOut"
-        app:layout_constraintBottom_toTopOf="@+id/hobby_swipe_refresh"
+        app:layout_constraintTop_toBottomOf="@+id/hobby_swipe_refresh_personal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.069"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.989" />
 
 

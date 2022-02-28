@@ -76,9 +76,9 @@
         <action
             android:id="@+id/action_personal_Area_Details_to_login_page"
             app:destination="@id/login_page" />
-        <argument
-            android:name="user"
-            app:argType="com.example.hobbiz.Model.User" />
+        <action
+            android:id="@+id/action_personal_Area_Details_to_edit_Post_Page"
+            app:destination="@id/edit_Post_Page" />
     </fragment>
     <fragment
         android:id="@+id/my_Post"
@@ -100,6 +100,12 @@
         <action
             android:id="@+id/action_edit_Post_Page_to_personal_Area_Details"
             app:destination="@id/personal_Area_Details" />
+        <argument
+            android:name="hobby"
+            app:argType="com.example.hobbiz.Model.Hobbiz" />
+        <action
+            android:id="@+id/action_edit_Post_Page_to_home_Page"
+            app:destination="@id/home_Page" />
     </fragment>
     <fragment
         android:id="@+id/add_New_Post"
@@ -107,7 +113,7 @@
         android:label="fragment_add__new__post"
         tools:layout="@layout/fragment_add__new__post" >
         <action
-            android:id="@+id/action_add_New_Post_to_personal_Area_Details"
-            app:destination="@id/personal_Area_Details" />
+            android:id="@+id/action_add_New_Post_to_home_Page"
+            app:destination="@id/home_Page" />
     </fragment>
 </navigation>

@@ -6,6 +6,8 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.hobbiz.Model.Interfaces.DeleteHobbyListener;
+import com.example.hobbiz.Model.Interfaces.EditHobbyListener;
 import com.example.hobbiz.Model.Interfaces.GetUserById;
 import com.example.hobbiz.Model.Interfaces.UploadHobbyListener;
 import com.example.hobbiz.Model.Interfaces.UploadImageListener;
@@ -42,18 +44,13 @@ public class Model {
 
     public void reloadHobbysList() {
         hobbizListLoadingState.setValue(LoadingState.loading);
-//        Long localLastUpdate = Hobbiz.getLocalLastUpdated();
-        Long localLastUpdate = new Long(0);
+        Long localLastUpdate = Hobbiz.getLocalLastUpdated();
 
-        Log.d("TAG","localLastUpdate: " + localLastUpdate);
-
-
-         fbModel.getAllHobbiz(localLastUpdate,(list)-> {
+        fbModel.getAllHobbiz(localLastUpdate,(list)-> {
             if(list != null) {
                 MyApplication.executorService.execute(()-> {
                     Long lastUpdate = new Long(0);
                     for(Hobbiz hobby : list) {
-                        Log.d("!123121312312312", hobby.getAge() + " age hobby");
                         if(!hobby.isDelete_flag()) {
                             AppLocalDB.db.hobbizDao().insertAll(hobby);
                         }
@@ -73,10 +70,10 @@ public class Model {
             }
         });
     }
+
     public void uploadImage(Bitmap bitmap, String name, final UploadImageListener listener){
         fbModel.uploadImage(bitmap,name,listener);
     }
-
 
     public void addHobby(Hobbiz hobby, Bitmap bitmap, UploadHobbyListener listener) {
         fbModel.uploadHobby(hobby, bitmap, new UploadHobbyListener() {
@@ -89,5 +86,23 @@ public class Model {
     }
     public void getUserById(String userId, GetUserById listener) {
         fbModel.getUserById(userId,listener);
+    }
+    public LiveData<List<Hobbiz>> getUserHobbizByUserId(String userId){
+        return AppLocalDB.db.hobbizDao().getHobbyByUserId(userId);
+    }
+    public void editPost(Hobbiz hobbiz, Bitmap bitmap, EditHobbyListener listener) {
+        fbModel.editHobby(hobbiz, bitmap, listener);
+    }
+
+    public void deleteHobby(Hobbiz hobbiz, DeleteHobbyListener listener) {
+        hobbiz.setDelete_flag(true);
+        fbModel.deleteHobby(hobbiz, new DeleteHobbyListener() {
+            @Override
+            public void onComplete() {
+                hobbiz.setDelete_flag(true);
+                reloadHobbysList();
+                listener.onComplete();
+            }
+        });
     }
 }

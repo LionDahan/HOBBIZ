@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,14 +33,15 @@ import com.example.hobbiz.Model.Model;
 import com.example.hobbiz.Model.Recycler.MyAdapter;
 import com.example.hobbiz.Model.User;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 
 public class Personal_Area_Details extends Fragment implements View.OnClickListener {
 
     ImageButton addPost;
     View view;
-    EditText name, age, email;
-    User user1;
+    TextView email;
     MyAdapter adapter;
     RecyclerView recyclerView;
     ProgressBar progressbar;
@@ -47,35 +49,33 @@ public class Personal_Area_Details extends Fragment implements View.OnClickListe
     PersonalAreaViewModel viewModel;
     Button logout;
 
-//    @Override
-//    public void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        viewModel =  new ViewModelProvider(this).get(PersonalAreaViewModel.class);
-//    }
-
     @Override
-    public void onAttach(@NonNull Context context){
-        super.onAttach(context);
-        viewModel= new  ViewModelProvider(this).get(PersonalAreaViewModel.class);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        viewModel =  new ViewModelProvider(this).get(PersonalAreaViewModel.class);
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_personal__area__details, container, false);
-        SharedPreferences sp= getActivity().getSharedPreferences("login", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sp.edit();
 
-        viewModel.setData(user1);
+
         addPost = view.findViewById(R.id.add_post_btn);
-        name = view.findViewById(R.id.edit_name_txt);
-        email= view.findViewById(R.id.edit_email);
+        email= view.findViewById(R.id.profile_email);
         progressbar=view.findViewById(R.id.progressBar_in_personalArea);
-        swipeRefresh=view.findViewById(R.id.hobby_swipe_refresh);
+        swipeRefresh=view.findViewById(R.id.hobby_swipe_refresh_personal);
         logout=view.findViewById(R.id.logOut_from_personalArea);
         recyclerView=view.findViewById(R.id.hobby_list_on_personal);
         progressbar.setVisibility(View.VISIBLE);
+
         addPost.setOnClickListener(this);
         logout.setOnClickListener(this);
+
+        SharedPreferences sp = getActivity().getSharedPreferences("login", Context.MODE_PRIVATE);
+        String userId = sp.getString("userId", null);
+        String emailText = sp.getString("email", null);
+        viewModel.setData(userId);
 
         adapter= new MyAdapter();
         recyclerView.setHasFixedSize(true);
@@ -86,34 +86,27 @@ public class Personal_Area_Details extends Fragment implements View.OnClickListe
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.addItemDecoration(dividerItemDecoration);
 
+        email.setText(emailText);
 
-        viewModel.getData().observe(getViewLifecycleOwner(), new Observer<List<Hobbiz>>() {
-            @Override
-            public void onChanged(List<Hobbiz> products) {
-                adapter.setFragment(Personal_Area_Details.this);
-                adapter.setData(products);
-                adapter.notifyDataSetChanged();
-                progressbar.setVisibility(View.GONE);
-            }
+        viewModel.getData().observe(getViewLifecycleOwner(), posts -> {
+            adapter.setFragment(Personal_Area_Details.this);
+            adapter.setData(posts);
+            adapter.notifyDataSetChanged();
+            progressbar.setVisibility(View.INVISIBLE);
         });
 
-        adapter.setOnItemClickListener(new OnItemClickListener() {
-            @Override
-            public void onItemClick(int position, View v) {
-                Hobbiz hobby = viewModel.getData().getValue().get(position);
-                Home_PageDirections.ActionHomePageToHobbyDetailsPage action = Home_PageDirections.actionHomePageToHobbyDetailsPage(hobby);
-                Navigation.findNavController(v).navigate(action);
-            }
+        adapter.setOnItemClickListener((position, v) -> {
+            Hobbiz hobby = viewModel.getData().getValue().get(position);
+            Personal_Area_DetailsDirections.ActionPersonalAreaDetailsToEditPostPage action =
+                    Personal_Area_DetailsDirections.actionPersonalAreaDetailsToEditPostPage(hobby);
+            Navigation.findNavController(v).navigate(action);
         });
 
-        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                swipeRefresh.setRefreshing(true);
-                Model.instance.reloadHobbysList();
-                adapter.notifyDataSetChanged();
-                swipeRefresh.setRefreshing(false);
-            }
+        swipeRefresh.setOnRefreshListener(() -> {
+            swipeRefresh.setRefreshing(true);
+            Model.instance.reloadHobbysList();
+            adapter.notifyDataSetChanged();
+            swipeRefresh.setRefreshing(false);
         });
 
         swipeRefresh.setRefreshing(Model.instance.getHobbizLoadingState().getValue() == Model.LoadingState.loading);
@@ -121,6 +114,7 @@ public class Personal_Area_Details extends Fragment implements View.OnClickListe
         Model.instance.getHobbizLoadingState().observe(getViewLifecycleOwner(), loadingState -> {
             swipeRefresh.setRefreshing(loadingState == Model.LoadingState.loading);
         });
+
         return view;
 
     }
@@ -132,10 +126,11 @@ public class Personal_Area_Details extends Fragment implements View.OnClickListe
                 break;
 
             case R.id.logOut_from_personalArea:
-                SharedPreferences sp = getActivity().getSharedPreferences("Login", Context.MODE_PRIVATE);
+                SharedPreferences sp = getActivity().getSharedPreferences("login", Context.MODE_PRIVATE);
                 SharedPreferences.Editor Ed=sp.edit();
                 Ed.remove("email");
                 Ed.remove("password");
+                Ed.remove("userId");
                 Ed.commit();
 
                 Navigation.findNavController(view).navigate(Personal_Area_DetailsDirections.actionPersonalAreaDetailsToLoginPage());
@@ -144,9 +139,4 @@ public class Personal_Area_Details extends Fragment implements View.OnClickListe
     }
 
 
-    private void updateUserProfile() {
-        name.setText(user1.getFullName());
-        progressbar.setVisibility(View.GONE);
-
-    }
 }

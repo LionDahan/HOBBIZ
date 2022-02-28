@@ -1,5 +1,7 @@
 package com.example.hobbiz;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 
@@ -105,6 +107,12 @@ public class SignUP_page extends Fragment implements View.OnClickListener{
         DataModel.data_instence.registerUser(new User(userEmail, userName), userPassword, (user, task) -> {
             Log.d("task", task.toString());
             if(task.isSuccessful()) {
+                SharedPreferences sp = getActivity().getSharedPreferences("login", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sp.edit();
+                editor.putString("email", userEmail);
+                editor.putString("password", userPassword);
+                editor.putString("userId", user.getUid());
+                editor.commit();
                 Toast.makeText(getActivity(), "Sign-up success.", Toast.LENGTH_LONG).show();
                 Navigation.findNavController(view).navigate(SignUP_pageDirections.actionSignUPPageToHomePage());
             } else {

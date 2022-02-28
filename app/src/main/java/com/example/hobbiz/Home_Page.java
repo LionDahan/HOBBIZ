@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -41,7 +42,7 @@ public class Home_Page extends Fragment implements View.OnClickListener{
     ProgressBar prbar;
     RecyclerView hobiz_list;
     MyAdapter adapter;
-    User now_user;
+    User now_user = new User();
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -60,13 +61,14 @@ public class Home_Page extends Fragment implements View.OnClickListener{
         toProfile= view.findViewById(R.id.personalA_in_hobby_details);
 
 
-        SharedPreferences sp = getActivity().getSharedPreferences("Login", Context.MODE_PRIVATE);
-        String userId = sp.getString("userID", null);
+        SharedPreferences sp = getActivity().getSharedPreferences("login", Context.MODE_PRIVATE);
+        String userId = sp.getString("userId", null);
         if(userId!=null){
             Model.instance.getUserById(userId, new GetUserById() {
                 @Override
                 public void onComplete(User user) {
-                    now_user= user;
+                    Log.d("user from sp", user.getEmail());
+                    now_user = user;
                 }
             });
 
@@ -147,7 +149,7 @@ public class Home_Page extends Fragment implements View.OnClickListener{
                 Navigation.findNavController(view).navigate(Home_PageDirections.actionHomePageToAddNewPost());
                 break;
             case R.id.personalA_in_hobby_details:
-                Navigation.findNavController(view).navigate(Home_PageDirections.actionHomePageToPersonalAreaDetails2(now_user));
+                Navigation.findNavController(view).navigate(Home_PageDirections.actionHomePageToPersonalAreaDetails2());
                 break;
         }
     }

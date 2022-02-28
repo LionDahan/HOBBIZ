@@ -1,64 +1,169 @@
 package com.example.hobbiz;
 
+import static android.app.Activity.RESULT_OK;
+
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ProgressBar;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link Edit_Post_Page#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class Edit_Post_Page extends Fragment {
+import com.example.hobbiz.Model.Hobbiz;
+import com.example.hobbiz.Model.Interfaces.DeleteHobbyListener;
+import com.example.hobbiz.Model.Interfaces.EditHobbyListener;
+import com.example.hobbiz.Model.Model;
+import com.squareup.picasso.Picasso;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public Edit_Post_Page() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment Edit_Post_Page.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static Edit_Post_Page newInstance(String param1, String param2) {
-        Edit_Post_Page fragment = new Edit_Post_Page();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+public class Edit_Post_Page extends Fragment implements View.OnClickListener{
+    static final int REQUEST_IMAGE_CAPTURE = 1;
+    View view;
+    EditText description, name, age, contact, city;
+    ImageButton takeImage, delete, save;
+    Hobbiz hobby;
+    ProgressBar progressBar;
+    Bitmap bitmap = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        hobby = Edit_Post_PageArgs.fromBundle(getArguments()).getHobby();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_edit__post__page, container, false);
+        view = inflater.inflate(R.layout.fragment_edit__post__page, container, false);
+
+        description = view.findViewById(R.id.description_in_add_post);
+        name = view.findViewById(R.id.name_in_add_post);
+        city = view.findViewById(R.id.city_in_add_post);
+        age = view.findViewById(R.id.age_in_add_post);
+        progressBar = view.findViewById(R.id.progresbar_in_edit_post);
+        contact = view.findViewById(R.id.contact_in_add_post);
+        takeImage = view.findViewById(R.id.image_in_edit_post);
+        delete = view.findViewById(R.id.delete_in_edit_page);
+        save = view.findViewById(R.id.save_in_edit_post);
+
+        description.setText(hobby.getDescription());
+        name.setText(hobby.getHobby_Name());
+        city.setText(hobby.getCity());
+        age.setText(hobby.getAge());
+        contact.setText(hobby.getContact());
+
+        Picasso.get().load(hobby.getImage()).into(takeImage);
+
+        save.setOnClickListener(this);
+        takeImage.setOnClickListener(this);
+        delete.setOnClickListener(this);
+
+        return view;
+    }
+
+    public void onClick(View v) {
+        switch(v.getId()) {
+            case R.id.save_in_edit_post:
+                saveEditedPost();
+                break;
+            case R.id.image_in_edit_post:
+                uploadImage();
+                break;
+            case R.id.delete_in_edit_page:
+                deletePost();
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void deletePost() {
+        progressBar.setVisibility(View.VISIBLE);
+        Model.instance.deleteHobby(hobby, new DeleteHobbyListener() {
+            @Override
+            public void onComplete() {
+                progressBar.setVisibility(View.INVISIBLE);
+                Navigation.findNavController(view).navigate(Edit_Post_PageDirections.actionEditPostPageToHomePage());
+            }
+        });
+    }
+
+    public void saveEditedPost() {
+        progressBar.setVisibility(View.VISIBLE);
+
+
+        String descriptionIn, nameIn, cityIn, ageIn, contactIn;
+        descriptionIn = description.getText().toString();
+        nameIn = name.getText().toString();
+        cityIn = city.getText().toString();
+        ageIn = age.getText().toString();
+        contactIn = contact.getText().toString();
+
+
+        if (descriptionIn.isEmpty()){
+            description.setError("Required Field");
+            description.requestFocus();
+            return; }
+
+        if (nameIn.isEmpty()){
+            name.setError("Required Field");
+            name.requestFocus();
+            return; }
+
+        if (cityIn.isEmpty()){
+            city.setError("Required Field");
+            city.requestFocus();
+            return; }
+
+        if (ageIn.isEmpty()){
+            age.setError("Required Field");
+            age.requestFocus();
+            return; }
+
+        if (contactIn.isEmpty()){
+            contact.setError("Required Field");
+            contact.requestFocus();
+            return; }
+
+        hobby.setAge(ageIn);
+        hobby.setDescription(descriptionIn);
+        hobby.setCity(cityIn);
+        hobby.setHobby_Name(nameIn);
+        hobby.setContact(contactIn);
+
+        Model.instance.editPost(hobby, bitmap, new EditHobbyListener() {
+            @Override
+            public void onComplete(Hobbiz hobbiz) {
+                progressBar.setVisibility(View.INVISIBLE);
+                Model.instance.reloadHobbysList();
+                Navigation.findNavController(view).navigate(Edit_Post_PageDirections.actionEditPostPageToHomePage());
+            }
+        });
+
+    }
+
+    private void uploadImage() {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(intent,REQUEST_IMAGE_CAPTURE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK){
+            Bundle bundle = data.getExtras();
+            bitmap = (Bitmap) bundle.get("data");
+            takeImage.setImageBitmap(bitmap);
+        }
     }
 }

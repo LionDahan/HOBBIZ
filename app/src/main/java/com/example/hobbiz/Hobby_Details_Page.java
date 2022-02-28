@@ -1,7 +1,6 @@
 package com.example.hobbiz;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +13,6 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 
-import com.example.hobbiz.Model.User;
 import com.example.hobbiz.Model.Hobbiz;
 import com.squareup.picasso.Picasso;
 
@@ -40,12 +38,13 @@ public class Hobby_Details_Page extends Fragment implements View.OnClickListener
 
         toProfile = view.findViewById(R.id.personalA_in_hobby_details);
         name = view.findViewById(R.id.title_in_details_page);
-        city = view.findViewById(R.id.city_in_details_page);
-        ages = view.findViewById(R.id.age_in_details_page);
-        contact = view.findViewById(R.id.contact_in_details_page);
-        description= view.findViewById(R.id.description_in_details_page);
-        hobbyImage = view.findViewById(R.id.image_in_details_page);
+        city = view.findViewById(R.id.age_in_add_post);
+        ages = view.findViewById(R.id.name_in_add_post);
+        contact = view.findViewById(R.id.city_in_add_post);
+        description= view.findViewById(R.id.contact_in_add_post);
+        hobbyImage = view.findViewById(R.id.image_in_add_post);
         progressBar = view.findViewById(R.id.progressBar_in_personalArea);
+
 
         toProfile.setOnClickListener(this);
         name.setText( hobby.getHobby_Name());
@@ -55,7 +54,6 @@ public class Hobby_Details_Page extends Fragment implements View.OnClickListener
         description.setText(hobby.getDescription());
 
         hobbyImage.setImageResource(R.drawable.tennis);
-        Log.d("",hobby.getImage());
         if(hobby.getImage() != null) {
             Picasso.get().load(hobby.getImage()).into(hobbyImage);
         }
@@ -65,7 +63,7 @@ public class Hobby_Details_Page extends Fragment implements View.OnClickListener
     public void onClick(View v) {
         switch(v.getId()) {
             case R.id.personalA_in_hobby_details:
-                Navigation.findNavController(view).navigate(Hobby_Details_PageDirections.actionHobbyDetailsPageToPersonalAreaDetails(new User()));
+                Navigation.findNavController(view).navigate(Hobby_Details_PageDirections.actionHobbyDetailsPageToPersonalAreaDetails());
                 break;
 
         }

@@ -6,6 +6,8 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.example.hobbiz.Model.Interfaces.DeleteHobbyListener;
+import com.example.hobbiz.Model.Interfaces.EditHobbyListener;
 import com.example.hobbiz.Model.Interfaces.GetUserById;
 import com.example.hobbiz.Model.Interfaces.UploadHobbyListener;
 import com.example.hobbiz.Model.Interfaces.UploadImageListener;
@@ -97,8 +99,10 @@ public class DataModel {
                                     dataModelHobby.put("contact", hobbiz.getContact());
                                     dataModelHobby.put("description", hobbiz.getDescription());
                                     dataModelHobby.put("timestamp", FieldValue.serverTimestamp());
-                                    Log.d("IMG", url);
+                                    dataModelHobby.put("userId", hobbiz.getUserId());
+                                    Log.d("userid", hobbiz.getUserId()+ "");
                                     dataModelHobby.put("image", url);
+
                                     hobbyDocRef.set(dataModelHobby).addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
@@ -108,7 +112,7 @@ public class DataModel {
                                     });
                                 } else {
                                     listener.onComplete(task, new Hobbiz());
-                                    // pet will not be initialized and we will know that there was error.
+
                                 }
                             }
                         });
@@ -116,6 +120,34 @@ public class DataModel {
                 });
             }
         });
+    }
+    public void deleteHobby(Hobbiz hobbiz, DeleteHobbyListener listener){
+        DocumentReference documentReference= db.collection("hobbiz").document(hobbiz.getId());
+        documentReference.update("isDeleted", true).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                listener.onComplete();
+            }
+        });
+
+
+    }
+    public void editHobby(Hobbiz hobbiz, Bitmap bitmap, EditHobbyListener listener) {
+        DocumentReference docRef = db.collection("hobbiz").document(hobbiz.getId());
+        if(bitmap == null) {
+            docRef.set(hobbiz.toJson()).addOnSuccessListener(unused -> listener.onComplete(hobbiz));
+        } else {
+            uploadImage(bitmap, hobbiz.getId(), url -> {
+                hobbiz.setImage(url);
+                docRef.set(hobbiz.toJson()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        listener.onComplete(hobbiz);
+                    }
+                });
+            });
+        }
+
     }
 
     public interface GetHobbyListener{
@@ -167,11 +199,9 @@ public class DataModel {
                         Hobbiz h = Hobbiz.HobbizFromJson(doc.getData());
                         h.setId(doc.getId());
                         if (h != null) {
-                            Log.d("e", h.getAge() + "");
                             hobbizList.add(h);
                         }
                     }
-
                 }else {
                     Log.d("Hobby", "Not successfull - didn't get all hobbiz");
                 }

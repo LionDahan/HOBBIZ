@@ -1,6 +1,8 @@
 package com.example.hobbiz;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 
@@ -41,32 +43,34 @@ public class Add_New_Post extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         view= inflater.inflate(R.layout.fragment_add__new__post, container, false);
-        cancel = view.findViewById(R.id.cancel_btn);
-        save= view.findViewById(R.id.save_in_edit_post);
-        name= view.findViewById(R.id.age_in_details_page);
-        ages =view.findViewById(R.id.city_in_details_page);
-        city =view.findViewById(R.id.contact_in_details_page);
-        contact=view.findViewById(R.id.description_in_details_page);
-        description=view.findViewById(R.id.description_in_add_post);
+        cancel = view.findViewById(R.id.cancel_btn_inadd_post);
+        save= view.findViewById(R.id.save_in_add_post);
+        name= view.findViewById(R.id.name_in_add_post);
+        ages =view.findViewById(R.id.age_in_add_post);
+        city =view.findViewById(R.id.city_in_add_post);
+
+        contact = view.findViewById(R.id.contact_in_add_post);
+        description = view.findViewById(R.id.description_in_add_post);
         progressBar= view.findViewById(R.id.progresbar_in_add_post);
-        add_pic = view.findViewById(R.id.image_in_details_page);
+        add_pic = view.findViewById(R.id.image_in_add_post);
+
         cancel.setOnClickListener(this);
         save.setOnClickListener(this);
         add_pic.setOnClickListener(this);
+
 
         return view;
     }
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.cancel_btn:
-                Navigation.findNavController(view).navigateUp();
+            case R.id.cancel_btn_inadd_post:
+                Navigation.findNavController(view).navigate(Add_New_PostDirections.actionAddNewPostToHomePage());
                 break;
-            case R.id.image_in_details_page:
+            case R.id.image_in_add_post:
                 uploadImage();
                 break;
-            case R.id.save_in_edit_post:
+            case R.id.save_in_add_post:
                 savePost();
                 break;
         }
@@ -109,12 +113,15 @@ public class Add_New_Post extends Fragment implements View.OnClickListener {
         progressBar.setVisibility(View.VISIBLE);
 
         Hobbiz hobby = new Hobbiz(hobbyName_input,age_input,city_input, contact_input,description_input);
+        SharedPreferences sp= getActivity().getSharedPreferences("login", Context.MODE_PRIVATE);
+        String userId = sp.getString("userId", null);
+        hobby.setUserId(userId);
         DataModel.data_instence.uploadHobby(hobby, bitmap, new UploadHobbyListener() {
             @Override
             public void onComplete(Task task, Hobbiz hobby) {
                 if (hobby.getImage() != null){
                     Toast.makeText(getActivity(), "Upload Success", Toast.LENGTH_LONG).show();
-                    Navigation.findNavController(view).navigateUp();
+                    Navigation.findNavController(view).navigate(Add_New_PostDirections.actionAddNewPostToHomePage());
                 } else{
                     Toast.makeText(getActivity(),"Upload Failed", Toast.LENGTH_LONG).show();
                 }
