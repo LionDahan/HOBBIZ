@@ -51,8 +51,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         Hobbiz hobbiz = data.get(position);
         holder.name.setText(hobbiz.getHobby_Name());
-        holder.city.setText(hobbiz.getCity());
-        holder.ages.setText(hobbiz.getAge());
+        holder.city.setText("City: "+ hobbiz.getAge());
+        holder.ages.setText("Ages: "+ hobbiz.getCity());
 
         if (hobbiz.getImage() != null) {
             Picasso.get().load(hobbiz.getImage()).into(holder.img);

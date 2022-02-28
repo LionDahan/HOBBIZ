@@ -48,10 +48,10 @@ public class Hobby_Details_Page extends Fragment implements View.OnClickListener
 
         toProfile.setOnClickListener(this);
         name.setText( hobby.getHobby_Name());
-        city.setText(  hobby.getCity());
-        ages.setText(hobby.getAge());
-        contact.setText(hobby.getContact());
-        description.setText(hobby.getDescription());
+        city.setText( "City: " + hobby.getCity());
+        ages.setText("Ages: "+hobby.getAge());
+        contact.setText("Contact: "+ hobby.getContact());
+        description.setText("Description: "+ hobby.getDescription());
 
         hobbyImage.setImageResource(R.drawable.tennis);
         if(hobby.getImage() != null) {

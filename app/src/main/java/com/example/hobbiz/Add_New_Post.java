@@ -49,7 +49,6 @@ public class Add_New_Post extends Fragment implements View.OnClickListener {
         name= view.findViewById(R.id.name_in_add_post);
         ages =view.findViewById(R.id.age_in_add_post);
         city =view.findViewById(R.id.city_in_add_post);
-
         contact = view.findViewById(R.id.contact_in_add_post);
         description = view.findViewById(R.id.description_in_add_post);
         progressBar= view.findViewById(R.id.progresbar_in_add_post);
