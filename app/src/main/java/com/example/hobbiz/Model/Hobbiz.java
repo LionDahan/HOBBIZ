@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
@@ -22,7 +21,7 @@ public class Hobbiz implements Parcelable {
     @NonNull
     private String id ="";
     private String hobby_Name,age, city, contact, description, image, userId;
-    private boolean delete_flag;
+    private boolean isDeleted;
 
     Long lastUpdated = new Long(0);
 
@@ -89,11 +88,11 @@ public class Hobbiz implements Parcelable {
     public void setLastUpdated(Long lastUpdated) {
         this.lastUpdated = lastUpdated;
     }
-    public boolean isDelete_flag(){
-        return delete_flag;
+    public boolean getIsDeleted(){
+        return isDeleted;
     }
-    public void setDelete_flag(boolean delete){
-        delete_flag = delete;
+    public void setIsDeleted(boolean delete){
+        isDeleted = delete;
     }
 
     static Hobbiz HobbizFromJson(Map<String,Object> json){
@@ -110,7 +109,7 @@ public class Hobbiz implements Parcelable {
         Hobbiz hobby = new Hobbiz(name,city,age,contact,description);
         hobby.setImage(image);
         hobby.setUserId(userId);
-        hobby.setDelete_flag(isDeleted);
+        hobby.setIsDeleted(isDeleted);
         Timestamp ts = (Timestamp)json.get(Constants.LAST_UPDATED);
         hobby.setLastUpdated(new Long(ts.getSeconds()));
 
@@ -160,7 +159,7 @@ public class Hobbiz implements Parcelable {
         parcel.writeString(image);
         parcel.writeString(userId);
 
-        parcel.writeByte((byte) (delete_flag ? 1 : 0));
+        parcel.writeByte((byte) (isDeleted ? 1 : 0));
         if (lastUpdated == null) {
             parcel.writeByte((byte) 0);
         } else {
@@ -179,7 +178,7 @@ public class Hobbiz implements Parcelable {
         image = in.readString();
         userId= in.readString();
 
-        delete_flag = in.readByte() != 0;
+        isDeleted = in.readByte() != 0;
         if (in.readByte() == 0) {
             lastUpdated = null;
         } else {
@@ -198,7 +197,7 @@ public class Hobbiz implements Parcelable {
         dbHobby.put("timestamp", FieldValue.serverTimestamp());
         dbHobby.put("image", this.getImage());
         dbHobby.put("userId", userId);
-        dbHobby.put("isDeleted", isDelete_flag());
+        dbHobby.put("isDeleted", getIsDeleted());
 
         return dbHobby;
     }

@@ -1,7 +1,6 @@
 package com.example.hobbiz.Model;
 
 import android.graphics.Bitmap;
-import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -51,7 +50,7 @@ public class Model {
                 MyApplication.executorService.execute(()-> {
                     Long lastUpdate = new Long(0);
                     for(Hobbiz hobby : list) {
-                        if(!hobby.isDelete_flag()) {
+                        if(!hobby.getIsDeleted()) {
                             AppLocalDB.db.hobbizDao().insertAll(hobby);
                         }
                         else {
@@ -95,11 +94,11 @@ public class Model {
     }
 
     public void deleteHobby(Hobbiz hobbiz, DeleteHobbyListener listener) {
-        hobbiz.setDelete_flag(true);
+        hobbiz.setIsDeleted(true);
         fbModel.deleteHobby(hobbiz, new DeleteHobbyListener() {
             @Override
             public void onComplete() {
-                hobbiz.setDelete_flag(true);
+                hobbiz.setIsDeleted(true);
                 reloadHobbysList();
                 listener.onComplete();
             }
