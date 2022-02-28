@@ -20,6 +20,9 @@ import android.widget.Toast;
 
 import com.example.hobbiz.Model.DataModel;
 import com.example.hobbiz.Model.User;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 
 public class SignUP_page extends Fragment implements View.OnClickListener{
@@ -101,7 +104,7 @@ public class SignUP_page extends Fragment implements View.OnClickListener{
         }
         progressBar.setVisibility(View.VISIBLE);
 
-        DataModel.data_instance.registerUser(new User(userEmail, userName), userPassword, (user, task) -> {
+        DataModel.data_instence.registerUser(new User(userEmail, userName), userPassword, (user, task) -> {
             Log.d("task", task.toString());
             if(task.isSuccessful()) {
                 SharedPreferences sp = getActivity().getSharedPreferences("login", Context.MODE_PRIVATE);
