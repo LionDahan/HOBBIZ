@@ -100,8 +100,8 @@ public class DataModel {
                                     dataModelHobby.put("description", hobbiz.getDescription());
                                     dataModelHobby.put("timestamp", FieldValue.serverTimestamp());
                                     dataModelHobby.put("userId", hobbiz.getUserId());
-                                    Log.d("userid", hobbiz.getUserId()+ "");
                                     dataModelHobby.put("image", url);
+                                    dataModelHobby.put("isDeleted", false);
 
                                     hobbyDocRef.set(dataModelHobby).addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override

@@ -33,6 +33,7 @@ public class Hobbiz implements Parcelable {
         this.city = city;
         this.contact=contact;
         this.description= description;
+
     }
 
     final static String TIME = "timestamp";
