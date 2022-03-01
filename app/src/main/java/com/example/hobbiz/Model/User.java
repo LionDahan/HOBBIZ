@@ -89,30 +89,4 @@ public class User implements Parcelable{
     }
 
 
-//    static User fromJson(Map<String,Object> json) {
-//        String name = (String)json.get("full_name");
-//        String email = (String)json.get("e_mail");
-//        User u = new User(name, email);
-//        return u;
-//    }
-
-//    public static void userToSharedPreference(User user, SharedPreferences.Editor editor) {
-//        editor.putString(Constants.USER + "full_name", user.getFullName());
-//        editor.putString(Constants.USER + "e_mail", user.getEmail());
-//
-//    }
-//
-//    public static User userFromSharedPreference(SharedPreferences sp) {
-//        String fname = sp.getString(Constants.USER + "full_name", null);
-//        String email = sp.getString(Constants.USER + "e_mail", null);
-//        String id = sp.getString(Constants.USER + "id", null);
-//
-//        return new User( email, fname, id);
-//    }
-//
-//    public static void logoutUserFromSP(SharedPreferences.Editor editor) {
-//        editor.remove(Constants.USER + "full_name");
-//        editor.remove(Constants.USER + "e_mail");
-//        editor.remove(Constants.USER + "id");
-//    }
 }

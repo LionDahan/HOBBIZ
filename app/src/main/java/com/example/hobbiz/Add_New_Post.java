@@ -46,11 +46,11 @@ public class Add_New_Post extends Fragment implements View.OnClickListener {
         view= inflater.inflate(R.layout.fragment_add__new__post, container, false);
         cancel = view.findViewById(R.id.cancel_btn_inadd_post);
         save= view.findViewById(R.id.save_in_add_post);
-        name= view.findViewById(R.id.name_in_add_post);
-        ages =view.findViewById(R.id.age_in_add_post);
-        city =view.findViewById(R.id.city_in_add_post);
-        contact = view.findViewById(R.id.contact_in_add_post);
-        description = view.findViewById(R.id.description_in_add_post);
+        name= view.findViewById(R.id.ages_indetails);
+        ages =view.findViewById(R.id.agesEditttttt);
+        city =view.findViewById(R.id.ciryEditttt);
+        contact = view.findViewById(R.id.contactEdittt);
+        description = view.findViewById(R.id.description_in_edit);
         progressBar= view.findViewById(R.id.progresbar_in_add_post);
         add_pic = view.findViewById(R.id.image_in_add_post);
 

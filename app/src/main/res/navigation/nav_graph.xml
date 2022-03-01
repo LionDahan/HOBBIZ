@@ -68,9 +68,6 @@
         android:label="fragment_personal__area__details"
         tools:layout="@layout/fragment_personal__area__details" >
         <action
-            android:id="@+id/action_personal_Area_Details_to_my_Post"
-            app:destination="@id/my_Post" />
-        <action
             android:id="@+id/action_personal_Area_Details_to_add_New_Post"
             app:destination="@id/add_New_Post" />
         <action
@@ -78,18 +75,6 @@
             app:destination="@id/login_page" />
         <action
             android:id="@+id/action_personal_Area_Details_to_edit_Post_Page"
-            app:destination="@id/edit_Post_Page" />
-    </fragment>
-    <fragment
-        android:id="@+id/my_Post"
-        android:name="com.example.hobbiz.My_Post"
-        android:label="fragment_my__post"
-        tools:layout="@layout/fragment_my__post" >
-        <action
-            android:id="@+id/action_my_Post_to_personal_Area_Details"
-            app:destination="@id/personal_Area_Details" />
-        <action
-            android:id="@+id/action_my_Post_to_edit_Post_Page"
             app:destination="@id/edit_Post_Page" />
     </fragment>
     <fragment

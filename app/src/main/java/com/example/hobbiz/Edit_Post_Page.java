@@ -14,7 +14,6 @@ import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
@@ -46,20 +45,20 @@ public class Edit_Post_Page extends Fragment implements View.OnClickListener{
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_edit__post__page, container, false);
 
-        description = view.findViewById(R.id.description_in_add_post);
-        name = view.findViewById(R.id.name_in_add_post);
-        city = view.findViewById(R.id.city_in_add_post);
-        age = view.findViewById(R.id.age_in_add_post);
+        description = view.findViewById(R.id.description_in_edit);
+        name = view.findViewById(R.id.ages_indetails);
+        city = view.findViewById(R.id.ciryEditttt);
+        age = view.findViewById(R.id.agesEditttttt);
         progressBar = view.findViewById(R.id.progresbar_in_edit_post);
-        contact = view.findViewById(R.id.contact_in_add_post);
+        contact = view.findViewById(R.id.contactEdittt);
         takeImage = view.findViewById(R.id.image_in_edit_post);
         delete = view.findViewById(R.id.delete_in_edit_page);
         save = view.findViewById(R.id.save_in_edit_post);
 
-        description.setText(hobby.getDescription());
-        name.setText(hobby.getHobby_Name());
-        city.setText(hobby.getCity());
-        age.setText(hobby.getAge());
+        description.setText( hobby.getDescription());
+        name.setText( hobby.getHobby_Name());
+        age.setText(hobby.getCity());
+        city.setText( hobby.getAge());
         contact.setText(hobby.getContact());
 
         Picasso.get().load(hobby.getImage()).into(takeImage);

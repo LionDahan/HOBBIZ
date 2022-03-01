@@ -38,18 +38,18 @@ public class Hobby_Details_Page extends Fragment implements View.OnClickListener
 
         toProfile = view.findViewById(R.id.personalA_in_hobby_details);
         name = view.findViewById(R.id.title_in_details_page);
-        city = view.findViewById(R.id.age_in_add_post);
-        ages = view.findViewById(R.id.name_in_add_post);
-        contact = view.findViewById(R.id.city_in_add_post);
-        description= view.findViewById(R.id.contact_in_add_post);
+        city = view.findViewById(R.id.agesEditttttt);
+        ages = view.findViewById(R.id.ages_indetails);
+        contact = view.findViewById(R.id.ciryEditttt);
+        description= view.findViewById(R.id.contactEdittt);
         hobbyImage = view.findViewById(R.id.image_in_add_post);
         progressBar = view.findViewById(R.id.progressBar_in_personalArea);
 
 
         toProfile.setOnClickListener(this);
         name.setText( hobby.getHobby_Name());
-        city.setText( "City: " + hobby.getCity());
-        ages.setText("Ages: "+hobby.getAge());
+        city.setText( "Ages: " + hobby.getCity());
+        ages.setText("City: "+hobby.getAge());
         contact.setText("Contact: "+ hobby.getContact());
         description.setText("Description: "+ hobby.getDescription());
 
